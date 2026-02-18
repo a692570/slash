@@ -28,10 +28,17 @@ export interface UserResponse {
 }
 
 // -------------------------------------------
+// BILL CATEGORY TYPES
+// -------------------------------------------
+
+export type BillCategory = 'internet' | 'cell_phone' | 'insurance' | 'medical';
+
+// -------------------------------------------
 // PROVIDER TYPES
 // -------------------------------------------
 
-export type ProviderId = 
+// Internet/Cable providers
+export type InternetProviderId = 
   | 'comcast'
   | 'spectrum'
   | 'att'
@@ -39,12 +46,35 @@ export type ProviderId =
   | 'cox'
   | 'optimum';
 
+// Cell phone providers
+export type CellPhoneProviderId = 
+  | 'tmobile'
+  | 'verizon_wireless'
+  | 'att_wireless'
+  | 'mint_mobile'
+  | 'cricket';
+
+// Insurance providers
+export type InsuranceProviderId = 
+  | 'state_farm'
+  | 'geico'
+  | 'progressive'
+  | 'allstate'
+  | 'liberty_mutual'
+  | 'usaa';
+
+// Medical providers are user-entered (no fixed list)
+
+export type ProviderId = InternetProviderId | CellPhoneProviderId | InsuranceProviderId | string;
+
 export interface Provider {
   id: ProviderId;
   name: string;
   displayName: string;
+  category: BillCategory;
   logoUrl: string;
   retentionDepartmentPhone?: string;
+  customerServicePhone?: string;
 }
 
 // -------------------------------------------
@@ -57,6 +87,8 @@ export interface Bill {
   id: string;
   userId: string;
   provider: ProviderId;
+  category: BillCategory;
+  providerName?: string; // For medical bills - user-entered provider name
   accountNumber: string;
   currentRate: number;
   planName?: string;
@@ -68,6 +100,8 @@ export interface Bill {
 
 export interface BillCreateInput {
   provider: ProviderId;
+  category: BillCategory;
+  providerName?: string; // For medical bills
   accountNumber: string;
   currentRate: number;
   planName?: string;
@@ -85,6 +119,8 @@ export interface BillUpdateInput {
 export interface BillResponse {
   id: string;
   provider: ProviderId;
+  category: BillCategory;
+  providerName?: string;
   accountNumber: string;
   currentRate: number;
   planName?: string;
@@ -92,6 +128,19 @@ export interface BillResponse {
   status: BillStatus;
   createdAt: string;
   updatedAt: string;
+}
+
+// -------------------------------------------
+// CC STATEMENT SCANNER TYPES
+// -------------------------------------------
+
+export interface DetectedBill {
+  provider: ProviderId | string;
+  category: BillCategory;
+  amount: number;
+  transactionDate: string;
+  description: string;
+  confidence: number; // 0-1, how confident we are this is a negotiable bill
 }
 
 // -------------------------------------------
@@ -112,7 +161,10 @@ export type NegotiationTactic =
   | 'loyalty_play'
   | 'churn_threat'
   | 'retention_close'
-  | 'supervisor_request';
+  | 'supervisor_request'
+  | 'cash_pay_discount'      // Medical specific
+  | 'payment_plan'           // Medical specific
+  | 'itemized_bill_review';  // Medical specific
 
 export interface NegotiationAttempt {
   tactic: NegotiationTactic;
@@ -257,49 +309,178 @@ export interface DashboardData {
 // CONSTANTS
 // -------------------------------------------
 
-export const PROVIDERS: Record<ProviderId, Provider> = {
+// Category display names
+export const CATEGORY_NAMES: Record<BillCategory, string> = {
+  internet: 'Internet/Cable',
+  cell_phone: 'Cell Phone',
+  insurance: 'Insurance (Auto/Home)',
+  medical: 'Medical Bills',
+};
+
+// Internet/Cable providers
+const INTERNET_PROVIDERS: Record<InternetProviderId, Provider> = {
   comcast: {
     id: 'comcast',
     name: 'comcast',
     displayName: 'Xfinity',
+    category: 'internet',
     logoUrl: '/logos/comcast.svg',
-    retentionDepartmentPhone: '1-800-934-6489'
+    retentionDepartmentPhone: '1-800-934-6489',
   },
   spectrum: {
     id: 'spectrum',
     name: 'spectrum',
     displayName: 'Spectrum',
+    category: 'internet',
     logoUrl: '/logos/spectrum.svg',
-    retentionDepartmentPhone: '1-866-564-2255'
+    retentionDepartmentPhone: '1-866-564-2255',
   },
   att: {
     id: 'att',
     name: 'att',
     displayName: 'AT&T Internet',
+    category: 'internet',
     logoUrl: '/logos/att.svg',
-    retentionDepartmentPhone: '1-800-331-0500'
+    retentionDepartmentPhone: '1-800-331-0500',
   },
   verizon: {
     id: 'verizon',
     name: 'verizon',
     displayName: 'Verizon Fios',
+    category: 'internet',
     logoUrl: '/logos/verizon.svg',
-    retentionDepartmentPhone: '1-888-294-4357'
+    retentionDepartmentPhone: '1-888-294-4357',
   },
   cox: {
     id: 'cox',
     name: 'cox',
     displayName: 'Cox Communications',
+    category: 'internet',
     logoUrl: '/logos/cox.svg',
-    retentionDepartmentPhone: '1-800-234-3993'
+    retentionDepartmentPhone: '1-800-234-3993',
   },
   optimum: {
     id: 'optimum',
     name: 'optimum',
     displayName: 'Optimum',
+    category: 'internet',
     logoUrl: '/logos/optimum.svg',
-    retentionDepartmentPhone: '1-866-218-3130'
-  }
+    retentionDepartmentPhone: '1-866-218-3130',
+  },
+};
+
+// Cell phone providers
+const CELL_PHONE_PROVIDERS: Record<CellPhoneProviderId, Provider> = {
+  tmobile: {
+    id: 'tmobile',
+    name: 'tmobile',
+    displayName: 'T-Mobile',
+    category: 'cell_phone',
+    logoUrl: '/logos/tmobile.svg',
+    retentionDepartmentPhone: '1-877-746-0909',
+    customerServicePhone: '1-800-937-8997',
+  },
+  verizon_wireless: {
+    id: 'verizon_wireless',
+    name: 'verizon_wireless',
+    displayName: 'Verizon Wireless',
+    category: 'cell_phone',
+    logoUrl: '/logos/verizon.svg',
+    retentionDepartmentPhone: '1-888-294-4357',
+    customerServicePhone: '1-800-922-0204',
+  },
+  att_wireless: {
+    id: 'att_wireless',
+    name: 'att_wireless',
+    displayName: 'AT&T Wireless',
+    category: 'cell_phone',
+    logoUrl: '/logos/att.svg',
+    retentionDepartmentPhone: '1-800-331-0500',
+    customerServicePhone: '1-800-331-0500',
+  },
+  mint_mobile: {
+    id: 'mint_mobile',
+    name: 'mint_mobile',
+    displayName: 'Mint Mobile',
+    category: 'cell_phone',
+    logoUrl: '/logos/mint.svg',
+    customerServicePhone: '1-800-683-7017',
+  },
+  cricket: {
+    id: 'cricket',
+    name: 'cricket',
+    displayName: 'Cricket Wireless',
+    category: 'cell_phone',
+    logoUrl: '/logos/cricket.svg',
+    customerServicePhone: '1-800-274-2538',
+  },
+};
+
+// Insurance providers
+const INSURANCE_PROVIDERS: Record<InsuranceProviderId, Provider> = {
+  state_farm: {
+    id: 'state_farm',
+    name: 'state_farm',
+    displayName: 'State Farm',
+    category: 'insurance',
+    logoUrl: '/logos/statefarm.svg',
+    customerServicePhone: '1-800-782-8332',
+  },
+  geico: {
+    id: 'geico',
+    name: 'geico',
+    displayName: 'Geico',
+    category: 'insurance',
+    logoUrl: '/logos/geico.svg',
+    customerServicePhone: '1-800-207-7847',
+  },
+  progressive: {
+    id: 'progressive',
+    name: 'progressive',
+    displayName: 'Progressive',
+    category: 'insurance',
+    logoUrl: '/logos/progressive.svg',
+    customerServicePhone: '1-800-776-4737',
+  },
+  allstate: {
+    id: 'allstate',
+    name: 'allstate',
+    displayName: 'Allstate',
+    category: 'insurance',
+    logoUrl: '/logos/allstate.svg',
+    customerServicePhone: '1-800-255-7828',
+  },
+  liberty_mutual: {
+    id: 'liberty_mutual',
+    name: 'liberty_mutual',
+    displayName: 'Liberty Mutual',
+    category: 'insurance',
+    logoUrl: '/logos/libertymutual.svg',
+    customerServicePhone: '1-800-290-8711',
+  },
+  usaa: {
+    id: 'usaa',
+    name: 'usaa',
+    displayName: 'USAA',
+    category: 'insurance',
+    logoUrl: '/logos/usaa.svg',
+    customerServicePhone: '1-800-531-8722',
+  },
+};
+
+// All providers combined
+export const PROVIDERS: Record<ProviderId, Provider> = {
+  ...INTERNET_PROVIDERS,
+  ...CELL_PHONE_PROVIDERS,
+  ...INSURANCE_PROVIDERS,
+};
+
+// Providers by category
+export const PROVIDERS_BY_CATEGORY: Record<BillCategory, Provider[]> = {
+  internet: Object.values(INTERNET_PROVIDERS),
+  cell_phone: Object.values(CELL_PHONE_PROVIDERS),
+  insurance: Object.values(INSURANCE_PROVIDERS),
+  medical: [], // No fixed providers - user enters manually
 };
 
 export const DEFAULT_FEE_PERCENTAGE = 0.10; // 10% of savings
@@ -308,30 +489,54 @@ export const NEGOTIATION_TACTICS: Record<NegotiationTactic, {
   name: string;
   description: string;
   priority: number;
+  categories: BillCategory[]; // Which categories this tactic applies to
 }> = {
   competitor_conquest: {
     name: 'Competitor Conquest',
     description: 'Use competitor pricing as leverage',
-    priority: 1
+    priority: 1,
+    categories: ['internet', 'cell_phone', 'insurance'],
   },
   loyalty_play: {
     name: 'Loyalty Play',
     description: 'Emphasize customer tenure and loyalty',
-    priority: 2
+    priority: 2,
+    categories: ['internet', 'cell_phone', 'insurance'],
   },
   churn_threat: {
     name: 'Churn Threat',
     description: 'Express intent to cancel or switch',
-    priority: 3
+    priority: 3,
+    categories: ['internet', 'cell_phone', 'insurance'],
   },
   retention_close: {
     name: 'Retention Close',
     description: 'Close when rep offers discount',
-    priority: 4
+    priority: 4,
+    categories: ['internet', 'cell_phone', 'insurance'],
   },
   supervisor_request: {
     name: 'Supervisor Request',
     description: 'Escalate to supervisor for better offers',
-    priority: 5
-  }
+    priority: 5,
+    categories: ['internet', 'cell_phone', 'insurance'],
+  },
+  cash_pay_discount: {
+    name: 'Cash Pay Discount',
+    description: 'Ask for discount if paying cash instead of insurance',
+    priority: 1,
+    categories: ['medical'],
+  },
+  payment_plan: {
+    name: 'Payment Plan',
+    description: 'Set up interest-free payment plan for large bills',
+    priority: 2,
+    categories: ['medical'],
+  },
+  itemized_bill_review: {
+    name: 'Itemized Bill Review',
+    description: 'Request itemized bill to check for errors or overcharges',
+    priority: 3,
+    categories: ['medical'],
+  },
 };

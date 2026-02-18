@@ -4,6 +4,7 @@ import { Dashboard } from './pages/Dashboard';
 import { AddBill } from './pages/AddBill';
 import { BillDetail } from './pages/BillDetail';
 import { NegotiationLive } from './pages/NegotiationLive';
+import { ScanStatement } from './pages/ScanStatement';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="add-bill" element={<AddBill />} />
+          <Route path="scan" element={<ScanStatement />} />
           <Route path="bills/:id" element={<BillDetail />} />
           <Route path="negotiations/:id" element={<NegotiationLive />} />
         </Route>

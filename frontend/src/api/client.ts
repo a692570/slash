@@ -2,6 +2,8 @@
 export interface Bill {
   id: string;
   provider: string;
+  category: string;
+  providerName?: string;
   currentRate: number;
   accountNumber: string;
   planName?: string;
@@ -29,6 +31,8 @@ export interface DashboardStats {
 
 export interface CreateBillRequest {
   provider: string;
+  category: string;
+  providerName?: string;
   currentRate: number;
   accountNumber: string;
   planName?: string;
@@ -88,7 +92,8 @@ export const mockStats: DashboardStats = {
 export const mockBills: Bill[] = [
   {
     id: '1',
-    provider: 'Comcast/Xfinity',
+    provider: 'Xfinity',
+    category: 'internet',
     currentRate: 89.99,
     accountNumber: '8472916352',
     planName: 'Performance Pro Internet',
@@ -96,19 +101,31 @@ export const mockBills: Bill[] = [
   },
   {
     id: '2',
-    provider: 'Verizon',
-    currentRate: 75.00,
+    provider: 'T-Mobile',
+    category: 'cell_phone',
+    currentRate: 85.00,
     accountNumber: '5129384761',
-    planName: '5G Do More Unlimited',
+    planName: 'Magenta MAX',
     createdAt: '2024-01-20T14:15:00Z',
   },
   {
     id: '3',
-    provider: 'AT&T',
-    currentRate: 65.00,
-    accountNumber: '3928174650',
-    planName: 'Fiber Internet 500',
+    provider: 'Geico',
+    category: 'insurance',
+    currentRate: 145.00,
+    accountNumber: 'GEICO123456',
+    planName: 'Auto Insurance - Full Coverage',
     createdAt: '2024-02-01T09:00:00Z',
+  },
+  {
+    id: '4',
+    provider: 'Stanford Medical Center',
+    category: 'medical',
+    providerName: 'Stanford Medical Center',
+    currentRate: 450.00,
+    accountNumber: 'SMC-789456',
+    planName: 'Emergency Room Visit',
+    createdAt: '2024-01-28T11:00:00Z',
   },
 ];
 
@@ -126,7 +143,7 @@ export const mockNegotiations: Negotiation[] = [
   },
   {
     id: 'n2',
-    billId: '2',
+    billId: '3',
     status: 'calling',
     createdAt: '2024-02-17T18:00:00Z',
     updatedAt: '2024-02-17T18:05:00Z',

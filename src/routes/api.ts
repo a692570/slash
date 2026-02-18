@@ -3,6 +3,7 @@
 // ===========================================
 
 import { Router, Request, Response } from 'express';
+import multer from 'multer';
 import {
   createBill,
   getBill,
@@ -24,6 +25,7 @@ import { researchCompetitorRates } from '../services/research.js';
 import { buildStrategy } from '../services/strategy.js';
 import { getProviderInsights } from '../services/graph.js';
 import { initiateCall, handleWebhook } from '../services/voice.js';
+import { parseCCStatement } from '../services/scanner.js';
 import {
   BillCreateInput,
   BillUpdateInput,
@@ -35,6 +37,21 @@ import {
 } from '../types/index.js';
 
 const router = Router();
+
+// Configure multer for PDF uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB max
+  },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF files are allowed'));
+    }
+  },
+});
 
 // Helper to get user ID from header
 function getUserId(req: Request): string | undefined {
@@ -199,6 +216,7 @@ router.get('/bills', (req: Request, res: Response): void => {
     const response: BillResponse[] = bills.map(bill => ({
       id: bill.id,
       provider: bill.provider,
+      category: bill.category,
       accountNumber: bill.accountNumber,
       currentRate: bill.currentRate,
       planName: bill.planName,
@@ -253,6 +271,7 @@ router.post('/bills', (req: Request, res: Response): void => {
       data: {
         id: bill.id,
         provider: bill.provider,
+        category: bill.category,
         accountNumber: bill.accountNumber,
         currentRate: bill.currentRate,
         planName: bill.planName,
@@ -302,6 +321,7 @@ router.get('/bills/:id', (req: Request, res: Response): void => {
       data: {
         id: bill.id,
         provider: bill.provider,
+        category: bill.category,
         accountNumber: bill.accountNumber,
         currentRate: bill.currentRate,
         planName: bill.planName,
@@ -361,6 +381,7 @@ router.put('/bills/:id', (req: Request, res: Response): void => {
       data: {
         id: updated.id,
         provider: updated.provider,
+        category: updated.category,
         accountNumber: updated.accountNumber,
         currentRate: updated.currentRate,
         planName: updated.planName,
@@ -741,6 +762,51 @@ router.post('/webhooks/telnyx', async (req: Request, res: Response): Promise<voi
     res.status(500).json({
       success: false,
       error: 'Webhook processing failed',
+    });
+  }
+});
+
+// ===========================================
+// CC STATEMENT SCANNER ROUTES
+// ===========================================
+
+/**
+ * POST /api/scan - Scan CC statement PDF for recurring bills
+ */
+router.post('/scan', upload.single('statement'), async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = getUserId(req);
+    
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        error: 'Unauthorized',
+      });
+      return;
+    }
+    
+    if (!req.file) {
+      res.status(400).json({
+        success: false,
+        error: 'No PDF file uploaded',
+      });
+      return;
+    }
+    
+    console.log(`Processing PDF upload: ${req.file.originalname}, ${req.file.size} bytes`);
+    
+    // Parse the PDF and detect bills
+    const detectedBills = await parseCCStatement(req.file.buffer);
+    
+    res.json({
+      success: true,
+      data: detectedBills,
+    });
+  } catch (error) {
+    console.error('Scan error:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to process PDF',
     });
   }
 });

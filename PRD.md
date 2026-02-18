@@ -2,25 +2,30 @@
 
 ## Product Requirements Document (PRD)
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Hackathon:** Autonomous Agents Hackathon SF, Feb 27, 2026  
 **Status:** MVP Planning  
-**Focus:** Internet/Cable Vertical
+**Focus:** 4 Verticals (Internet, Cell Phone, Insurance, Medical)
 
 ---
 
 ## 1. Problem Statement
 
 ### The Pain
-- **Americans overpay on recurring bills** — average household spends $400+/month on telecom alone
+- **Americans overpay on recurring bills** — average household spends $400+/month on telecom, cell, insurance, and medical
 - **Sitting on hold for 30-60 minutes to negotiate is painful** — most people give up
 - **Existing services take 40% of savings** — Trim, Billshark, and similar take a massive cut
 - **No leverage** — individual customers have no bargaining power vs. billion-dollar providers
 
 ### Market Size
-- US telecom market: ~$500B/year
-- Average savings potential per household: $30-80/month
-- Adoption barrier: time + hassle + 40% fee
+- **Total Addressable Market**: 130M+ American households with recurring bills
+- **Average savings potential per household**: $200-600/year across all verticals
+- **Breakdown by vertical**:
+  - Internet/Cable: $20-50/month ($240-600/year)
+  - Cell Phone: $15-40/month ($180-480/year)
+  - Insurance: $30-100/month ($360-1200/year)
+  - Medical: 20-50% savings on individual bills
+- **Total US market**: $500B+ in recurring bills annually
 
 ---
 
@@ -33,6 +38,16 @@
 3. **Negotiates** on your behalf using proven tactics
 4. **Takes only 10%** of savings (vs 40% for competitors)
 
+### Verticals
+Slash operates across 4 major recurring bill categories:
+
+| Category | Example Providers | Savings Potential |
+|----------|-------------------|-------------------|
+| **Internet/Cable** | Xfinity, Spectrum, AT&T, Verizon Fios, Cox, Optimum | $20-50/month |
+| **Cell Phone** | T-Mobile, Verizon, AT&T, Mint Mobile, Cricket | $15-40/month |
+| **Insurance** | State Farm, Geico, Progressive, Allstate, Liberty Mutual, USAA | $30-100/month |
+| **Medical Bills** | Hospitals, clinics, labs (user-entered) | 20-50% off total |
+
 ### Key Differentiators
 | Feature | Slash | Trim | Billshark |
 |---------|-------|------|-----------|
@@ -40,7 +55,8 @@
 | AI Voice Calls | ✅ | ❌ | ❌ |
 | Competitor Research | ✅ | Limited | Limited |
 | Knowledge Graph | ✅ | ❌ | ❌ |
-| Vertical Focus | Internet 1st | Broad | Broad |
+| Verticals | 4 (Internet, Cell, Insurance, Medical) | Broad | Broad |
+| CC Statement Scanner | ✅ | ❌ | ❌ |
 
 ---
 
@@ -124,18 +140,17 @@
 
 ### Out of Scope (v1)
 - Mobile apps (web only)
-- Multiple verticals (Internet only)
 - Real payment processing (manual invoicing)
 - SMS notifications (email only)
 - Live chat support
 - Enterprise features
 
 ### Vertical Focus
-**Internet/Cable** — Why:
-- Highest call volume for retention departments
-- Competitor pricing readily available
-- Strong retention incentives (churn costs providers $300-500)
-- Clear success metrics
+**4 Verticals at Launch:**
+1. **Internet/Cable** — Highest call volume for retention departments, competitor pricing readily available, strong retention incentives
+2. **Cell Phone** — Similar dynamics to internet, high switching costs, competitive market
+3. **Insurance (Auto/Home)** — Annual renewals, competitor quotes as leverage, bundle discounts
+4. **Medical Bills** — Unique negotiation tactics (cash pay discount, payment plans, itemized bill review)
 
 ---
 
@@ -232,6 +247,11 @@ GET    /api/users/savings     # Total savings summary
 GET    /api/users/stats       # Dashboard stats
 ```
 
+#### CC Statement Scanner
+```
+POST   /api/scan              # Upload PDF, detect bills
+```
+
 ### Request/Response Examples
 
 #### Add Bill
@@ -312,6 +332,8 @@ NegotiationHistory {
 
 ### Core Tactics
 
+#### Telecom Tactics (Internet/Cable/Cell Phone)
+
 | Tactic | When Used | Script Summary |
 |--------|-----------|----------------|
 | **Competitor Conquest** | Competitor has lower rate | "I see X is offering Y for $Z" |
@@ -319,6 +341,23 @@ NegotiationHistory {
 | **Churn Threat** | High competitor offer | "I'm considering switching to..." |
 | **Retention Close** | Rep offers discount | "Can you do one better?" |
 | **Supervisor Request** | Rep stalls | "I'd like to speak with your supervisor" |
+
+#### Insurance Tactics
+
+| Tactic | When Used | Script Summary |
+|--------|-----------|----------------|
+| **Competitor Conquest** | Quote competitor rates | "Geico quoted me $X for the same coverage" |
+| **Loyalty Play** | Long-term customer | "I've been with you for X years..." |
+| **Bundle Discount** | Multiple policies | "What if I add home/renters insurance?" |
+| **Churn Threat** | Better quote available | "I'm considering switching..." |
+
+#### Medical Bill Tactics
+
+| Tactic | When Used | Script Summary |
+|--------|-----------|----------------|
+| **Itemized Bill Review** | First step always | "I'd like an itemized breakdown..." |
+| **Cash Pay Discount** | No insurance/underinsured | "What's the self-pay rate?" |
+| **Payment Plan** | Large bill | "Can I set up interest-free payments?" |
 
 ### Escalation Path
 
@@ -353,12 +392,13 @@ Tactic 4: Final Offer Accept
 | 2 | **Sign Up** | Registration | Email, password, phone |
 | 3 | **Login** | Authentication | Email, password |
 | 4 | **Dashboard** | Overview | Savings total, active bills, status cards |
-| 5 | **Add Bill** | Bill entry | Provider dropdown, account #, rate input |
-| 6 | **Bill List** | Manage bills | Cards with status, actions |
-| 7 | **Bill Detail** | Single bill view | Full details, negotiation history |
-| 8 | **Negotiation In Progress** | Real-time status | Live call status, timer, progress |
-| 9 | **Negotiation Complete** | Result | Success/fail, offer details, accept/decline |
-| 10 | **Profile/Settings** | User management | Account, billing history |
+| 5 | **Add Bill** | Bill entry | Category selector, provider dropdown, account #, rate input |
+| 6 | **Scan Statement** | PDF scanner | Drag-drop zone, detected bills list, "Add to Slash" buttons |
+| 7 | **Bill List** | Manage bills | Cards with status, actions |
+| 8 | **Bill Detail** | Single bill view | Full details, negotiation history |
+| 9 | **Negotiation In Progress** | Real-time status | Live call status, timer, progress |
+| 10 | **Negotiation Complete** | Result | Success/fail, offer details, accept/decline |
+| 11 | **Profile/Settings** | User management | Account, billing history |
 
 ### Wireframe Notes
 
@@ -379,6 +419,57 @@ Tactic 4: Final Offer Accept
 - Status text: "Researching competitor rates..." → "Connecting to provider..." → "Negotiating..."
 - Estimated time remaining
 - "Cancel" button (cancels call)
+
+**Scan Statement (Screen 6)**
+- Drag-and-drop zone for PDF upload
+- Progress indicator during scanning
+- List of detected bills with confidence scores
+- "Add to Slash" button per detected bill
+- Category and provider badges
+
+---
+
+## 8.5. CC Statement Scanner Feature
+
+### Overview
+The CC Statement Scanner allows users to upload a credit card statement PDF, automatically detect recurring bills that are negotiable, and add them to Slash with one click.
+
+### How It Works
+1. **Upload**: User drags & drops or selects a PDF credit card statement
+2. **Parse**: Backend extracts text using pdf-parse library
+3. **Detect**: Pattern matching identifies known provider names in transaction descriptions
+4. **Classify**: Each detected bill is categorized (internet, cell_phone, insurance, medical)
+5. **Present**: UI shows detected bills with confidence scores
+6. **Add**: User clicks "Add to Slash" to create the bill
+
+### Detection Logic
+```typescript
+// Provider patterns matched against transaction descriptions
+const PROVIDER_PATTERNS = {
+  'xfinity': { providerId: 'comcast', category: 'internet' },
+  'tmobile': { providerId: 'tmobile', category: 'cell_phone' },
+  'geico': { providerId: 'geico', category: 'insurance' },
+  // ... etc
+};
+
+// Confidence scoring
+- Direct substring match: 90% confidence
+- Partial word match: 70% confidence
+- Fuzzy match: 50% confidence
+```
+
+### Technical Implementation
+| Component | Technology |
+|-----------|------------|
+| PDF Parsing | pdf-parse (npm) |
+| File Upload | multer (multipart/form-data) |
+| Pattern Matching | Regex + substring matching |
+| API Endpoint | POST /api/scan |
+
+### Benefits
+- **Frictionless onboarding**: Users don't need to manually enter bill details
+- **Bill discovery**: Users may find bills they forgot were negotiable
+- **Higher conversion**: Lower barrier to adding bills = more negotiations
 
 ---
 

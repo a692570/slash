@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Receipt, PlusCircle } from 'lucide-react';
+import { LayoutDashboard, Receipt, PlusCircle, FileSearch } from 'lucide-react';
 
 export function Layout() {
   const location = useLocation();
@@ -48,6 +48,19 @@ export function Layout() {
               >
                 <PlusCircle className="w-5 h-5" />
                 <span className="font-medium">Add Bill</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/scan"
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                  isActive('/scan')
+                    ? 'bg-[#1a1a1a] text-white'
+                    : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'
+                }`}
+              >
+                <FileSearch className="w-5 h-5" />
+                <span className="font-medium">Scan Statement</span>
               </Link>
             </li>
             <li>
