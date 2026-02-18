@@ -8,6 +8,7 @@ import {
   CompetitorRate,
   Negotiation,
 } from '../types/index.js';
+import { getLeverage } from './graph.js';
 
 export interface NegotiationStrategy {
   tactics: NegotiationTactic[];
@@ -18,19 +19,41 @@ export interface NegotiationStrategy {
 }
 
 /**
- * Build a negotiation strategy based on bill and competitor data
+ * Build a negotiation strategy based on bill, competitor data, and graph intelligence
  */
-export function buildStrategy(
+export async function buildStrategy(
   bill: Bill,
   competitorRates: CompetitorRate[]
-): NegotiationStrategy {
+): Promise<NegotiationStrategy> {
+  // Get leverage data from Neo4j graph
+  const leverage = await getLeverage(bill.provider);
+  
+  // Merge graph rates with research rates (prefer graph data - it's verified)
+  let mergedRates = [...competitorRates];
+  
+  if (leverage && leverage.competitorOffers.length > 0) {
+    // Merge, removing duplicates by provider, prefer graph data
+    const existingProviders = new Set(mergedRates.map(r => r.provider));
+    for (const offer of leverage.competitorOffers) {
+      if (!existingProviders.has(offer.provider)) {
+        mergedRates.push(offer);
+      }
+    }
+    // Sort again
+    mergedRates.sort((a, b) => a.monthlyRate - b.monthlyRate);
+  }
+
   const tactics: NegotiationTactic[] = [];
   
-  // Check if competitor has lower rate
-  const lowerRateCompetitors = competitorRates.filter(
+  // Check if competitor has lower rate (use merged rates)
+  const lowerRateCompetitors = mergedRates.filter(
     r => r.monthlyRate < bill.currentRate
   );
   const hasCompetitiveAdvantage = lowerRateCompetitors.length > 0;
+  
+  // Check graph for retention offer insights
+  const hasRetentionData = leverage && leverage.retentionOffers.length > 0;
+  const highSuccessRetention = leverage?.retentionOffers.some(o => o.successRate > 0.6);
   
   // Determine tactics based on leverage
   if (hasCompetitiveAdvantage) {
@@ -45,10 +68,15 @@ export function buildStrategy(
   // Always have churn threat as fallback
   tactics.push('churn_threat');
   
+  // If we have high-success retention offers, add retention close
+  if (hasRetentionData || highSuccessRetention) {
+    tactics.push('retention_close');
+  }
+  
   // Add supervisor request as final escalation
   tactics.push('supervisor_request');
   
-  // Calculate expected savings
+  // Calculate expected savings using graph intelligence
   let expectedSavings = 0;
   if (hasCompetitiveAdvantage && lowerRateCompetitors[0]) {
     // Target a rate between current and competitor's best
@@ -56,6 +84,9 @@ export function buildStrategy(
       bill.currentRate - lowerRateCompetitors[0].monthlyRate,
       bill.currentRate * 0.25  // Cap at 25% savings
     );
+  } else if (leverage && leverage.averageSavings > 0) {
+    // Use historical average from graph
+    expectedSavings = Math.min(leverage.averageSavings, bill.currentRate * 0.25);
   } else {
     // Default to 15% savings
     expectedSavings = bill.currentRate * 0.15;
@@ -65,7 +96,7 @@ export function buildStrategy(
     tactics,
     primaryTactic: tactics[0],
     fallbackTactic: 'churn_threat',
-    script: generateNegotiationScript(tactics, bill, competitorRates),
+    script: generateNegotiationScript(tactics, bill, mergedRates),
     expectedSavings: Math.max(expectedSavings, 5), // Minimum $5 savings
   };
 }

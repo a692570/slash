@@ -3,6 +3,7 @@
 // ===========================================
 
 import { CompetitorRate, ProviderId, PROVIDERS } from '../types/index.js';
+import { storeCompetitorRates } from './graph.js';
 
 // Tavily API response types
 interface TavilySearchResult {
@@ -134,6 +135,11 @@ export async function researchCompetitorRates(
 
     // Sort by rate (lowest first)
     competitorRates.sort((a, b) => a.monthlyRate - b.monthlyRate);
+
+    // Store in Neo4j knowledge graph for leverage in future negotiations
+    if (competitorRates.length > 0) {
+      await storeCompetitorRates(provider, competitorRates);
+    }
 
     return competitorRates;
   } catch (error) {

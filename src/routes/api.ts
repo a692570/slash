@@ -22,6 +22,7 @@ import {
 } from '../services/storage.js';
 import { researchCompetitorRates } from '../services/research.js';
 import { buildStrategy } from '../services/strategy.js';
+import { getProviderInsights } from '../services/graph.js';
 import { initiateCall, handleWebhook } from '../services/voice.js';
 import {
   BillCreateInput,
@@ -29,6 +30,8 @@ import {
   UserCreateInput,
   NegotiationResponse,
   BillResponse,
+  ProviderId,
+  PROVIDERS,
 } from '../types/index.js';
 
 const router = Router();
@@ -469,8 +472,8 @@ router.post('/bills/:id/negotiate', async (req: Request, res: Response): Promise
     // Research competitor rates
     const competitorRates = await researchCompetitorRates(bill.provider, bill.currentRate);
     
-    // Build strategy
-    const strategy = buildStrategy(bill, competitorRates);
+    // Build strategy (async - uses graph for leverage data)
+    const strategy = await buildStrategy(bill, competitorRates);
     
     // Update negotiation with research and strategy
     updateNegotiation(negotiation.id, {
@@ -656,6 +659,57 @@ router.get('/dashboard', (req: Request, res: Response): void => {
     });
   } catch (error) {
     console.error('Dashboard error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+    });
+  }
+});
+
+// ===========================================
+// GRAPH / KNOWLEDGE GRAPH ROUTES
+// ===========================================
+
+/**
+ * GET /api/graph/provider/:id - Get provider insights from Neo4j
+ */
+router.get('/graph/provider/:id', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const providerId = String(req.params.id) as ProviderId;
+    
+    if (!PROVIDERS[providerId]) {
+      res.status(400).json({
+        success: false,
+        error: 'Invalid provider ID',
+      });
+      return;
+    }
+    
+    const insights = await getProviderInsights(providerId);
+    
+    if (!insights) {
+      // Graph not available - return empty data
+      res.json({
+        success: true,
+        data: {
+          provider: providerId,
+          connected: false,
+          message: 'Knowledge graph not available',
+        },
+      });
+      return;
+    }
+    
+    res.json({
+      success: true,
+      data: {
+        provider: providerId,
+        connected: true,
+        ...insights,
+      },
+    });
+  } catch (error) {
+    console.error('Graph provider insights error:', error);
     res.status(500).json({
       success: false,
       error: 'Internal server error',

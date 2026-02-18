@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import apiRouter from './routes/api.js';
+import { initGraph, seedProviders } from './services/graph.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -71,10 +72,20 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Slash API running on port ${PORT}`);
   console.log(`   Health: http://localhost:${PORT}/health`);
   console.log(`   API:    http://localhost:${PORT}/api`);
+  
+  // Initialize Neo4j knowledge graph
+  const graphConnected = await initGraph();
+  if (graphConnected) {
+    console.log('🧠 Knowledge Graph: Connected to Neo4j');
+    await seedProviders();
+    console.log('🧠 Knowledge Graph: Providers seeded');
+  } else {
+    console.log('🧠 Knowledge Graph: Not available (Neo4j not configured)');
+  }
 });
 
 export default app;
