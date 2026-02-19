@@ -3,115 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLASH - Your Bills Don't Stand a Chance</title>
+<title>Slash</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔪</text></svg>">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--red:#cc0000;--blood:#8b0000;--bright-red:#ff1a1a;--bg:#0a0a0a;--card:rgba(15,15,15,.9);--text:#e0d8d0;--dim:#666;--slash-width:3px}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+body{font-family:'Inter',sans-serif;background:#f5f0e8;color:#1a1a1a;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:#1a1a1a;text-decoration:none}
+.container{max-width:780px;margin:0 auto;padding:0 24px}
 
-/* Film grain */
-body::after{content:"";position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:.04;
-background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-
-/* Vignette */
-body::before{content:"";position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;
-background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.7) 100%)}
-
-a{color:var(--bright-red);text-decoration:none}
-.container{max-width:900px;margin:0 auto;padding:0 24px}
-
-/* Slash marks */
-.slash-mark{position:absolute;background:var(--red);opacity:.15;transform:rotate(-25deg)}
+/* Typography */
+.serif{font-family:'EB Garamond',serif}
+h1,h2,h3,.section-title{font-family:'EB Garamond',serif;font-weight:400}
 
 /* Hero */
-.hero{text-align:center;padding:140px 0 100px;position:relative}
-.tagline{font-family:'Special Elite',serif;font-size:14px;color:var(--red);letter-spacing:6px;text-transform:uppercase;margin-bottom:24px;opacity:.8}
-.hero-title{font-family:'Creepster',cursive;font-size:clamp(72px,14vw,140px);color:#fff;letter-spacing:8px;line-height:.9;margin-bottom:20px;
-text-shadow:0 0 40px rgba(204,0,0,.4),0 0 80px rgba(204,0,0,.2);position:relative;display:inline-block}
-.hero-title .knife{position:relative;display:inline}
+.hero{text-align:center;padding:160px 0 120px;position:relative}
+.hero-above{font-size:11px;letter-spacing:6px;text-transform:uppercase;color:#999;margin-bottom:40px}
+.hero-title{font-size:clamp(80px,16vw,160px);font-weight:400;letter-spacing:-2px;line-height:.85;margin-bottom:32px;color:#1a1a1a}
+.hero-line{width:40px;height:1px;background:#1a1a1a;margin:0 auto 32px}
+.hero-sub{font-family:'EB Garamond',serif;font-size:22px;font-style:italic;color:#666;max-width:400px;margin:0 auto;line-height:1.6}
 
-/* Drip effect on title */
-.drip{position:relative}
-.drip::after{content:"";position:absolute;bottom:-30px;left:50%;width:3px;height:30px;
-background:linear-gradient(to bottom,var(--red),transparent);transform:translateX(-50%);animation:drip 3s ease-in infinite}
-@keyframes drip{0%{height:0;opacity:1}60%{height:30px;opacity:.8}100%{height:40px;opacity:0}}
-
-.hero-sub{font-family:'Special Elite',serif;font-size:18px;color:var(--dim);margin-top:36px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8}
-
-/* CTA */
-.cta{display:inline-block;font-family:'Special Elite',serif;font-size:16px;color:#fff;border:2px solid var(--red);padding:16px 40px;margin-top:40px;letter-spacing:3px;text-transform:uppercase;transition:all .3s;position:relative;overflow:hidden}
-.cta::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(204,0,0,.2),transparent);transition:left .5s}
-.cta:hover::before{left:100%}
-.cta:hover{background:var(--red);box-shadow:0 0 30px rgba(204,0,0,.4)}
-
-/* Stats */
-.stats{display:flex;justify-content:center;gap:48px;margin-top:64px;flex-wrap:wrap}
-.stat{text-align:center}
-.stat-val{font-family:'Creepster',cursive;font-size:42px;color:var(--bright-red);display:block;text-shadow:0 0 20px rgba(255,26,26,.3)}
-.stat-label{font-family:'Special Elite',serif;font-size:12px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+/* Scroll prompt */
+.scroll{margin-top:80px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#bbb}
 
 /* Divider */
-.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--blood),transparent);margin:0 auto;opacity:.5}
+.divider{width:100%;height:1px;background:#d4cec4;margin:0}
 
 /* Section */
 section{padding:80px 0}
-.section-label{font-family:'Special Elite',serif;font-size:12px;color:var(--red);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;opacity:.7}
-.section-title{font-family:'Creepster',cursive;font-size:36px;color:#fff;letter-spacing:3px;margin-bottom:40px;text-shadow:0 0 20px rgba(204,0,0,.2)}
+.section-num{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#999;margin-bottom:8px}
+.section-title{font-size:32px;margin-bottom:40px;letter-spacing:-0.5px}
 
-/* Victims (how it works) */
-.victims{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.victim{position:relative;border:1px solid rgba(139,0,0,.3);background:var(--card);padding:32px 24px;text-align:center;transition:border-color .3s}
-.victim:hover{border-color:var(--red)}
-.victim-num{font-family:'Creepster',cursive;font-size:48px;color:var(--blood);opacity:.4;position:absolute;top:12px;right:16px}
-.victim-icon{font-size:32px;margin-bottom:16px}
-.victim h3{font-family:'Special Elite',serif;font-size:16px;color:#fff;margin-bottom:10px;letter-spacing:1px}
-.victim p{font-size:13px;color:var(--dim);line-height:1.8}
+/* Stats row */
+.stats{display:flex;justify-content:space-between;padding:48px 0;border-top:1px solid #d4cec4;border-bottom:1px solid #d4cec4;margin-bottom:0}
+.stat{text-align:center;flex:1}
+.stat+.stat{border-left:1px solid #d4cec4}
+.stat-val{font-family:'EB Garamond',serif;font-size:48px;font-weight:400;display:block;line-height:1}
+.stat-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999;margin-top:8px}
 
-/* Kill list (verticals) */
-.kill-list{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.target{border:1px solid rgba(139,0,0,.3);background:var(--card);padding:28px;display:flex;gap:20px;align-items:flex-start;transition:border-color .3s}
-.target:hover{border-color:var(--red)}
-.target-icon{font-size:36px;flex-shrink:0;margin-top:4px}
-.target h3{font-family:'Special Elite',serif;font-size:15px;color:#fff;margin-bottom:4px}
-.target .savings{font-family:'Creepster',cursive;font-size:24px;color:var(--bright-red);margin-bottom:6px}
-.target .names{font-size:11px;color:var(--dim)}
+/* Method (how it works) */
+.method{counter-reset:step}
+.method-step{display:grid;grid-template-columns:60px 1fr;gap:24px;padding:32px 0;border-bottom:1px solid #e8e2d8}
+.method-step:last-child{border-bottom:none}
+.method-step::before{counter-increment:step;content:counter(step,decimal-leading-zero);font-family:'EB Garamond',serif;font-size:36px;color:#ccc;line-height:1}
+.method-step h3{font-size:18px;font-weight:400;margin-bottom:6px}
+.method-step p{font-size:14px;color:#777;line-height:1.8}
 
-/* Body count (pricing) */
-.body-count{border:1px solid rgba(139,0,0,.3);background:var(--card);overflow:hidden}
-.body-count table{width:100%;border-collapse:collapse}
-.body-count th{font-family:'Special Elite',serif;font-size:11px;color:var(--red);letter-spacing:2px;text-transform:uppercase;padding:14px 20px;text-align:left;border-bottom:1px solid rgba(139,0,0,.3)}
-.body-count td{font-size:13px;padding:14px 20px;border-bottom:1px solid rgba(139,0,0,.1)}
-.body-count tr:last-child td{border-bottom:none}
-.body-count .survivor{background:rgba(204,0,0,.05)}
-.body-count .survivor td:first-child{color:var(--bright-red);font-family:'Special Elite',serif;font-weight:bold}
-.body-count .yes{color:var(--bright-red)}
-.body-count .no{color:#333}
+/* Targets (verticals) */
+.targets{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#d4cec4}
+.target-card{background:#f5f0e8;padding:36px 28px}
+.target-card h3{font-size:16px;font-weight:400;margin-bottom:4px}
+.target-card .savings{font-family:'EB Garamond',serif;font-size:28px;margin-bottom:8px}
+.target-card .providers{font-size:12px;color:#999;line-height:1.8}
 
-/* Weapons (tech) */
-.weapons{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.weapon{border:1px solid rgba(139,0,0,.3);background:var(--card);padding:28px;transition:border-color .3s}
-.weapon:hover{border-color:var(--red)}
-.weapon h3{font-family:'Special Elite',serif;font-size:14px;color:#fff;margin-bottom:10px}
-.weapon p{font-size:12px;color:var(--dim);line-height:1.9}
+/* Comparison */
+.comp{width:100%}
+.comp-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1px solid #e8e2d8;padding:14px 0}
+.comp-row:last-child{border-bottom:none}
+.comp-header{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#999;border-bottom:1px solid #d4cec4}
+.comp-row div{font-size:14px;color:#777}
+.comp-row div:first-child{color:#1a1a1a;font-family:'EB Garamond',serif;font-size:16px}
+.comp-row.slash div{color:#1a1a1a;font-weight:500}
+.comp-row.slash div:first-child{font-weight:700}
+.yes{color:#1a1a1a}
+.no{color:#ccc}
 
-/* Final scene CTA */
-.final{text-align:center;padding:100px 0 120px;position:relative}
-.final h2{font-family:'Creepster',cursive;font-size:clamp(36px,6vw,52px);color:#fff;letter-spacing:4px;margin-bottom:12px;text-shadow:0 0 30px rgba(204,0,0,.3)}
-.final .sub{font-family:'Special Elite',serif;font-size:14px;color:var(--dim);margin-bottom:36px;letter-spacing:2px}
-.credit-roll{font-family:'Special Elite',serif;font-size:11px;color:var(--dim);margin-top:32px;letter-spacing:2px}
+/* Stack */
+.stack{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#d4cec4}
+.stack-item{background:#f5f0e8;padding:32px 24px}
+.stack-item h3{font-size:15px;font-weight:400;margin-bottom:8px}
+.stack-item p{font-size:13px;color:#999;line-height:1.8}
+
+/* CTA */
+.cta-section{text-align:center;padding:120px 0}
+.cta-section h2{font-size:clamp(36px,6vw,56px);letter-spacing:-1px;margin-bottom:12px}
+.cta-section p{font-family:'EB Garamond',serif;font-style:italic;color:#999;font-size:18px;margin-bottom:40px}
+.cta-btn{display:inline-block;font-size:12px;letter-spacing:4px;text-transform:uppercase;border:1px solid #1a1a1a;padding:16px 40px;transition:all .3s}
+.cta-btn:hover{background:#1a1a1a;color:#f5f0e8}
 
 /* Footer */
-footer{border-top:1px solid rgba(139,0,0,.2);padding:24px 0;text-align:center;font-size:12px;color:#333}
-footer span{color:var(--red)}
+footer{border-top:1px solid #d4cec4;padding:32px 0;text-align:center;font-size:11px;color:#bbb;letter-spacing:2px}
 
 /* Responsive */
 @media(max-width:768px){
-  .victims,.weapons{grid-template-columns:1fr}
-  .kill-list{grid-template-columns:1fr}
-  .stats{gap:28px}
-  .hero{padding:100px 0 60px}
+  .stats{flex-direction:column;gap:32px}
+  .stat+.stat{border-left:none;border-top:1px solid #d4cec4;padding-top:32px}
+  .targets,.stack{grid-template-columns:1fr}
+  .comp-row{grid-template-columns:1fr 1fr;gap:8px}
+  .hero{padding:100px 0 80px}
 }
 </style>
 </head>
@@ -121,184 +100,181 @@ footer span{color:var(--red)}
 
   <!-- Hero -->
   <section class="hero">
-    <div class="tagline">From the creators of "I'll call them tomorrow"</div>
-    <div class="hero-title"><span class="drip">SLASH</span></div>
-    <div class="hero-sub">
-      Your bills have been getting away with murder.<br>
-      Not anymore.
-    </div>
-    <a href="https://github.com/a692570/slash" class="cta">View the Source Code</a>
-    <div class="stats">
-      <div class="stat">
-        <span class="stat-val">$400+</span>
-        <span class="stat-label">Monthly Overpay</span>
-      </div>
-      <div class="stat">
-        <span class="stat-val">10%</span>
-        <span class="stat-label">Our Cut</span>
-      </div>
-      <div class="stat">
-        <span class="stat-val">70%+</span>
-        <span class="stat-label">Kill Rate</span>
-      </div>
-      <div class="stat">
-        <span class="stat-val">4</span>
-        <span class="stat-label">Hunting Grounds</span>
-      </div>
-    </div>
+    <div class="hero-above">Autonomous Agents Hackathon SF</div>
+    <h1 class="hero-title">Slash</h1>
+    <div class="hero-line"></div>
+    <div class="hero-sub">Your bills have been getting away with it for too long.</div>
+    <div class="scroll">Scroll</div>
   </section>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
+
+<!-- Stats -->
+<div class="container">
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-val">$400+</span>
+      <span class="stat-label">Monthly Overpay</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val">10%</span>
+      <span class="stat-label">Our Cut</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val">70%</span>
+      <span class="stat-label">Kill Rate</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val">4</span>
+      <span class="stat-label">Verticals</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
 
   <!-- How It Works -->
   <section>
-    <div class="section-label">The Method</div>
-    <div class="section-title">Three Strikes. They're Out.</div>
-    <div class="victims">
-      <div class="victim">
-        <div class="victim-num">I</div>
-        <div class="victim-icon">📋</div>
-        <h3>Identify the Target</h3>
-        <p>Upload your bill or scan your credit card statement. We find every recurring charge that's bleeding you dry.</p>
+    <div class="section-num">I. The Method</div>
+    <div class="section-title">You do nothing. We handle it.</div>
+    <div class="method">
+      <div class="method-step">
+        <div></div>
+        <div>
+          <h3>Add your bill</h3>
+          <p>Enter your provider and current rate. Or upload a credit card statement and let us find what's costing you.</p>
+        </div>
       </div>
-      <div class="victim">
-        <div class="victim-num">II</div>
-        <div class="victim-icon">📞</div>
-        <h3>Make the Call</h3>
-        <p>Our AI agent researches competitor rates, dials the retention department, and goes to work. You don't lift a finger.</p>
+      <div class="method-step">
+        <div></div>
+        <div>
+          <h3>We research, then call</h3>
+          <p>AI scrapes competitor pricing. Builds a strategy. Dials the retention department. Negotiates like it does this for a living. Because it does.</p>
+        </div>
       </div>
-      <div class="victim">
-        <div class="victim-num">III</div>
-        <div class="victim-icon">💀</div>
-        <h3>Finish Them</h3>
-        <p>Your rate drops. You keep 90% of the savings. The provider never saw it coming.</p>
+      <div class="method-step">
+        <div></div>
+        <div>
+          <h3>Your rate drops</h3>
+          <p>You keep 90% of the savings. No hold music, no anxiety, no "can I speak to your manager" energy. Just results.</p>
+        </div>
       </div>
     </div>
   </section>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
 
-  <!-- Verticals -->
+<!-- Verticals -->
+<div class="container">
   <section>
-    <div class="section-label">Hunting Grounds</div>
-    <div class="section-title">No Bill Is Safe.</div>
-    <div class="kill-list">
-      <div class="target">
-        <div class="target-icon">🌐</div>
-        <div>
-          <h3>Internet / Cable</h3>
-          <div class="savings">$20-50/mo</div>
-          <div class="names">Xfinity, Spectrum, AT&T, Verizon Fios, Cox</div>
-        </div>
-      </div>
-      <div class="target">
-        <div class="target-icon">📱</div>
-        <div>
-          <h3>Cell Phone</h3>
-          <div class="savings">$15-40/mo</div>
-          <div class="names">T-Mobile, Verizon, AT&T, Mint Mobile, Cricket</div>
-        </div>
-      </div>
-      <div class="target">
-        <div class="target-icon">🛡️</div>
-        <div>
-          <h3>Insurance</h3>
-          <div class="savings">$30-100/mo</div>
-          <div class="names">State Farm, Geico, Progressive, Allstate</div>
-        </div>
-      </div>
-      <div class="target">
-        <div class="target-icon">🏥</div>
-        <div>
-          <h3>Medical Bills</h3>
-          <div class="savings">20-50% off</div>
-          <div class="names">Hospitals, clinics, labs. Any provider.</div>
-        </div>
-      </div>
-    </div>
+    <div class="section-num">II. The Targets</div>
+    <div class="section-title">Four ways you're overpaying.</div>
   </section>
+</div>
+<div class="container" style="padding:0">
+  <div class="targets">
+    <div class="target-card">
+      <h3>Internet / Cable</h3>
+      <div class="savings">$20 - 50/mo</div>
+      <div class="providers">Xfinity, Spectrum, AT&T, Verizon Fios, Cox, Optimum</div>
+    </div>
+    <div class="target-card">
+      <h3>Cell Phone</h3>
+      <div class="savings">$15 - 40/mo</div>
+      <div class="providers">T-Mobile, Verizon, AT&T, Mint Mobile, Cricket</div>
+    </div>
+    <div class="target-card">
+      <h3>Insurance</h3>
+      <div class="savings">$30 - 100/mo</div>
+      <div class="providers">State Farm, Geico, Progressive, Allstate, Liberty Mutual</div>
+    </div>
+    <div class="target-card">
+      <h3>Medical Bills</h3>
+      <div class="savings">20 - 50% off</div>
+      <div class="providers">Hospitals, clinics, labs. Any provider you enter.</div>
+    </div>
+  </div>
+</div>
 
-  <div class="divider"></div>
+<div class="divider" style="margin-top:0"></div>
 
-  <!-- Pricing -->
+<div class="container">
+
+  <!-- Comparison -->
   <section>
-    <div class="section-label">Body Count</div>
-    <div class="section-title">The Competition Didn't Make It.</div>
-    <div class="body-count">
-      <table>
-        <thead>
-          <tr>
-            <th>Service</th>
-            <th>Fee</th>
-            <th>AI Voice</th>
-            <th>Research</th>
-            <th>Scanner</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="survivor">
-            <td>🔪 Slash</td>
-            <td class="yes">10%</td>
-            <td class="yes">Yes</td>
-            <td class="yes">Yes</td>
-            <td class="yes">Yes</td>
-          </tr>
-          <tr>
-            <td>Trim</td>
-            <td>25-40%</td>
-            <td class="no">No</td>
-            <td>Limited</td>
-            <td class="no">No</td>
-          </tr>
-          <tr>
-            <td>Billshark</td>
-            <td>40%</td>
-            <td class="no">No</td>
-            <td>Limited</td>
-            <td class="no">No</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- Tech -->
-  <section>
-    <div class="section-label">The Weapons</div>
-    <div class="section-title">What's in the Kit.</div>
-    <div class="weapons">
-      <div class="weapon">
-        <h3>🗣️ Telnyx Voice AI</h3>
-        <p>Real outbound calls via Call Control. Actual phone calls to retention departments. Not a chatbot wearing a phone costume.</p>
+    <div class="section-num">III. The Competition</div>
+    <div class="section-title">They charge 40%. We charge 10%.</div>
+    <div class="comp">
+      <div class="comp-row comp-header">
+        <div>Service</div>
+        <div>Fee</div>
+        <div>AI Calls</div>
+        <div>Research</div>
       </div>
-      <div class="weapon">
-        <h3>🔍 Tavily + Neo4j</h3>
-        <p>Live competitor pricing feeds a knowledge graph. Every negotiation sharpens the blade for the next one.</p>
+      <div class="comp-row slash">
+        <div>Slash</div>
+        <div>10%</div>
+        <div class="yes">Yes</div>
+        <div class="yes">Yes</div>
       </div>
-      <div class="weapon">
-        <h3>🧠 OpenAI Realtime</h3>
-        <p>GPT-4o runs the negotiation persona. Polite, persistent, relentless. Asks for the supervisor when it has to.</p>
+      <div class="comp-row">
+        <div>Trim</div>
+        <div>25 - 40%</div>
+        <div class="no">No</div>
+        <div>Limited</div>
+      </div>
+      <div class="comp-row">
+        <div>Billshark</div>
+        <div>40%</div>
+        <div class="no">No</div>
+        <div>Limited</div>
       </div>
     </div>
   </section>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
 
-  <!-- Final CTA -->
-  <section class="final">
-    <h2>The Sequel Is Coming.</h2>
-    <div class="sub">Autonomous Agents Hackathon SF // Feb 27, 2026</div>
-    <a href="https://github.com/a692570/slash" class="cta">View on GitHub</a>
-    <div class="credit-roll">A film by Abhishek // Powered by Telnyx</div>
+<!-- Tech -->
+<div class="container" style="padding-left:0;padding-right:0">
+  <section style="padding-bottom:0">
+    <div style="padding:0 24px">
+      <div class="section-num">IV. The Weapons</div>
+      <div class="section-title">What's under the hood.</div>
+    </div>
   </section>
+  <div class="stack">
+    <div class="stack-item">
+      <h3>Telnyx Voice AI</h3>
+      <p>Real outbound phone calls via Call Control. Not a chatbot. An actual voice agent calling retention departments.</p>
+    </div>
+    <div class="stack-item">
+      <h3>Tavily + Neo4j</h3>
+      <p>Live competitor research feeds a knowledge graph. Every negotiation makes the next one sharper.</p>
+    </div>
+    <div class="stack-item">
+      <h3>OpenAI Realtime</h3>
+      <p>GPT-4o powers the voice. Polite. Persistent. Armed with data. Escalates when it needs to.</p>
+    </div>
+  </div>
+</div>
 
+<div class="divider"></div>
+
+<div class="container">
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>The sequel writes itself.</h2>
+    <p>Hackathon SF, February 27, 2026.</p>
+    <a href="https://github.com/a692570/slash" class="cta-btn">View Source</a>
+  </section>
 </div>
 
 <footer>
   <div class="container">
-    🔪 SLASH // <span>2026</span> // All bills were harmed in the making of this product.
+    Slash // Built by Abhishek // 2026
   </div>
 </footer>
 
