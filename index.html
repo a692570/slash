@@ -3,130 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLASH // AI Bill Negotiator</title>
+<title>SLASH - Your Bills Don't Stand a Chance</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔪</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&family=Inter:wght@400;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--neon:#00ff88;--pink:#ff2d95;--cyan:#00e5ff;--yellow:#ffe600;--bg:#0a0a12;--card:#12121e;--border:#1e1e30}
-body{font-family:'Press Start 2P',monospace;background:var(--bg);color:#fff;line-height:2;-webkit-font-smoothing:none;overflow-x:hidden}
+:root{--red:#cc0000;--blood:#8b0000;--bright-red:#ff1a1a;--bg:#0a0a0a;--card:rgba(15,15,15,.9);--text:#e0d8d0;--dim:#666;--slash-width:3px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
 
-/* Scanlines overlay */
-body::after{content:"";position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;
-background:repeating-linear-gradient(0deg,rgba(0,0,0,.15) 0px,rgba(0,0,0,.15) 1px,transparent 1px,transparent 3px);opacity:.3}
+/* Film grain */
+body::after{content:"";position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:.04;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-/* CRT vignette */
+/* Vignette */
 body::before{content:"";position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;
-background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.6) 100%)}
+background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.7) 100%)}
 
-a{color:var(--neon);text-decoration:none}
-.container{max-width:960px;margin:0 auto;padding:0 20px}
+a{color:var(--bright-red);text-decoration:none}
+.container{max-width:900px;margin:0 auto;padding:0 24px}
 
-/* Pixel border helper */
-.pixel-box{background:var(--card);border:3px solid var(--neon);position:relative;padding:28px;margin-bottom:24px;
-box-shadow:0 0 20px rgba(0,255,136,.15),inset 0 0 20px rgba(0,255,136,.03)}
-.pixel-box::before,.pixel-box::after{content:"";position:absolute;width:8px;height:8px;background:var(--neon)}
-.pixel-box::before{top:-3px;left:-3px}
-.pixel-box::after{bottom:-3px;right:-3px}
-
-/* Blinking cursor */
-@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
-.cursor{display:inline-block;width:12px;height:18px;background:var(--neon);animation:blink 1s step-end infinite;vertical-align:middle;margin-left:4px}
-
-/* Glow text */
-.glow{text-shadow:0 0 10px var(--neon),0 0 20px var(--neon),0 0 40px var(--neon)}
-.glow-pink{text-shadow:0 0 10px var(--pink),0 0 20px var(--pink),0 0 40px var(--pink)}
-.glow-cyan{text-shadow:0 0 10px var(--cyan),0 0 20px var(--cyan)}
-.glow-yellow{text-shadow:0 0 10px var(--yellow),0 0 20px var(--yellow)}
-
-/* Flicker */
-@keyframes flicker{0%,93%,95%,97%,100%{opacity:1}94%,96%{opacity:.7}}
-
-/* Badge */
-.badge{display:inline-block;font-size:8px;color:var(--yellow);border:2px solid var(--yellow);padding:6px 12px;margin-bottom:32px;animation:flicker 4s infinite;text-transform:uppercase;letter-spacing:2px;box-shadow:0 0 10px rgba(255,230,0,.2)}
+/* Slash marks */
+.slash-mark{position:absolute;background:var(--red);opacity:.15;transform:rotate(-25deg)}
 
 /* Hero */
-.hero{text-align:center;padding:100px 0 60px}
-.hero-title{font-size:clamp(32px,7vw,64px);letter-spacing:4px;margin-bottom:8px;animation:flicker 3s infinite}
-.hero-sub{font-size:clamp(10px,2vw,14px);color:var(--cyan);margin-bottom:40px;letter-spacing:1px}
-.hero-sub .glow-cyan{animation:flicker 5s infinite}
+.hero{text-align:center;padding:140px 0 100px;position:relative}
+.tagline{font-family:'Special Elite',serif;font-size:14px;color:var(--red);letter-spacing:6px;text-transform:uppercase;margin-bottom:24px;opacity:.8}
+.hero-title{font-family:'Creepster',cursive;font-size:clamp(72px,14vw,140px);color:#fff;letter-spacing:8px;line-height:.9;margin-bottom:20px;
+text-shadow:0 0 40px rgba(204,0,0,.4),0 0 80px rgba(204,0,0,.2);position:relative;display:inline-block}
+.hero-title .knife{position:relative;display:inline}
 
-/* INSERT COIN button */
-.insert-coin{display:inline-block;font-family:'Press Start 2P',monospace;font-size:14px;background:transparent;color:var(--yellow);border:3px solid var(--yellow);padding:16px 32px;cursor:pointer;text-transform:uppercase;letter-spacing:2px;transition:all .15s;box-shadow:0 0 15px rgba(255,230,0,.2);animation:flicker 2s infinite}
-.insert-coin:hover{background:var(--yellow);color:#000;box-shadow:0 0 30px rgba(255,230,0,.5);animation:none}
+/* Drip effect on title */
+.drip{position:relative}
+.drip::after{content:"";position:absolute;bottom:-30px;left:50%;width:3px;height:30px;
+background:linear-gradient(to bottom,var(--red),transparent);transform:translateX(-50%);animation:drip 3s ease-in infinite}
+@keyframes drip{0%{height:0;opacity:1}60%{height:30px;opacity:.8}100%{height:40px;opacity:0}}
 
-/* Stats bar */
-.stats-bar{display:flex;justify-content:center;gap:32px;margin-top:48px;flex-wrap:wrap}
-.stat-item{text-align:center}
-.stat-val{font-size:24px;color:var(--neon);display:block;margin-bottom:4px}
-.stat-label{font-size:8px;color:#666;letter-spacing:1px;text-transform:uppercase}
+.hero-sub{font-family:'Special Elite',serif;font-size:18px;color:var(--dim);margin-top:36px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8}
 
-/* Section headers */
-.section-header{font-size:10px;color:var(--pink);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
-.section-title{font-size:20px;color:var(--neon);margin-bottom:32px;letter-spacing:2px}
-section{padding:60px 0}
+/* CTA */
+.cta{display:inline-block;font-family:'Special Elite',serif;font-size:16px;color:#fff;border:2px solid var(--red);padding:16px 40px;margin-top:40px;letter-spacing:3px;text-transform:uppercase;transition:all .3s;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(204,0,0,.2),transparent);transition:left .5s}
+.cta:hover::before{left:100%}
+.cta:hover{background:var(--red);box-shadow:0 0 30px rgba(204,0,0,.4)}
 
-/* How it works - arcade steps */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.step{text-align:center}
-.step .pixel-box{min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.step-icon{font-size:40px;margin-bottom:16px}
-.step h3{font-size:11px;color:var(--neon);margin-bottom:10px;letter-spacing:1px}
-.step p{font-size:9px;color:#888;line-height:2.2}
+/* Stats */
+.stats{display:flex;justify-content:center;gap:48px;margin-top:64px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-val{font-family:'Creepster',cursive;font-size:42px;color:var(--bright-red);display:block;text-shadow:0 0 20px rgba(255,26,26,.3)}
+.stat-label{font-family:'Special Elite',serif;font-size:12px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
 
-/* Level select (verticals) */
-.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.level{text-align:center;cursor:default;transition:transform .15s}
-.level:hover{transform:scale(1.03)}
-.level .pixel-box{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,229,255,.1)}
-.level .pixel-box::before,.level .pixel-box::after{background:var(--cyan)}
-.level-icon{font-size:36px;margin-bottom:12px}
-.level h3{font-size:10px;color:var(--cyan);margin-bottom:8px}
-.level .savings{font-size:14px;color:var(--neon);margin-bottom:4px}
-.level .enemies{font-size:7px;color:#555;line-height:2.2}
+/* Divider */
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--blood),transparent);margin:0 auto;opacity:.5}
 
-/* Score table (pricing) */
-.score-table{width:100%;border-collapse:separate;border-spacing:0}
-.score-table th{font-size:9px;color:var(--pink);text-transform:uppercase;letter-spacing:2px;padding:12px 16px;text-align:left;border-bottom:2px solid var(--pink)}
-.score-table td{font-size:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
-.score-table tr:last-child td{border-bottom:none}
-.score-table .you{color:var(--neon)}
-.score-table .you td{background:rgba(0,255,136,.03)}
-.score-table .win{color:var(--neon)}
-.score-table .lose{color:#ff4444}
+/* Section */
+section{padding:80px 0}
+.section-label{font-family:'Special Elite',serif;font-size:12px;color:var(--red);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;opacity:.7}
+.section-title{font-family:'Creepster',cursive;font-size:36px;color:#fff;letter-spacing:3px;margin-bottom:40px;text-shadow:0 0 20px rgba(204,0,0,.2)}
 
-/* Tech */
-.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.tech-item .pixel-box{border-color:var(--yellow);box-shadow:0 0 15px rgba(255,230,0,.08)}
-.tech-item .pixel-box::before,.tech-item .pixel-box::after{background:var(--yellow)}
-.tech-item h3{font-size:10px;color:var(--yellow);margin-bottom:10px}
-.tech-item p{font-size:8px;color:#777;line-height:2.4}
+/* Victims (how it works) */
+.victims{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.victim{position:relative;border:1px solid rgba(139,0,0,.3);background:var(--card);padding:32px 24px;text-align:center;transition:border-color .3s}
+.victim:hover{border-color:var(--red)}
+.victim-num{font-family:'Creepster',cursive;font-size:48px;color:var(--blood);opacity:.4;position:absolute;top:12px;right:16px}
+.victim-icon{font-size:32px;margin-bottom:16px}
+.victim h3{font-family:'Special Elite',serif;font-size:16px;color:#fff;margin-bottom:10px;letter-spacing:1px}
+.victim p{font-size:13px;color:var(--dim);line-height:1.8}
 
-/* Game Over CTA */
-.game-over{text-align:center;padding:80px 0 100px}
-.game-over h2{font-size:28px;color:var(--pink);letter-spacing:3px;margin-bottom:8px;animation:flicker 3s infinite}
-.game-over .sub{font-size:10px;color:#666;margin-bottom:32px}
-.game-over .hi-score{font-size:9px;color:var(--yellow);margin-top:24px;letter-spacing:1px}
+/* Kill list (verticals) */
+.kill-list{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.target{border:1px solid rgba(139,0,0,.3);background:var(--card);padding:28px;display:flex;gap:20px;align-items:flex-start;transition:border-color .3s}
+.target:hover{border-color:var(--red)}
+.target-icon{font-size:36px;flex-shrink:0;margin-top:4px}
+.target h3{font-family:'Special Elite',serif;font-size:15px;color:#fff;margin-bottom:4px}
+.target .savings{font-family:'Creepster',cursive;font-size:24px;color:var(--bright-red);margin-bottom:6px}
+.target .names{font-size:11px;color:var(--dim)}
+
+/* Body count (pricing) */
+.body-count{border:1px solid rgba(139,0,0,.3);background:var(--card);overflow:hidden}
+.body-count table{width:100%;border-collapse:collapse}
+.body-count th{font-family:'Special Elite',serif;font-size:11px;color:var(--red);letter-spacing:2px;text-transform:uppercase;padding:14px 20px;text-align:left;border-bottom:1px solid rgba(139,0,0,.3)}
+.body-count td{font-size:13px;padding:14px 20px;border-bottom:1px solid rgba(139,0,0,.1)}
+.body-count tr:last-child td{border-bottom:none}
+.body-count .survivor{background:rgba(204,0,0,.05)}
+.body-count .survivor td:first-child{color:var(--bright-red);font-family:'Special Elite',serif;font-weight:bold}
+.body-count .yes{color:var(--bright-red)}
+.body-count .no{color:#333}
+
+/* Weapons (tech) */
+.weapons{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.weapon{border:1px solid rgba(139,0,0,.3);background:var(--card);padding:28px;transition:border-color .3s}
+.weapon:hover{border-color:var(--red)}
+.weapon h3{font-family:'Special Elite',serif;font-size:14px;color:#fff;margin-bottom:10px}
+.weapon p{font-size:12px;color:var(--dim);line-height:1.9}
+
+/* Final scene CTA */
+.final{text-align:center;padding:100px 0 120px;position:relative}
+.final h2{font-family:'Creepster',cursive;font-size:clamp(36px,6vw,52px);color:#fff;letter-spacing:4px;margin-bottom:12px;text-shadow:0 0 30px rgba(204,0,0,.3)}
+.final .sub{font-family:'Special Elite',serif;font-size:14px;color:var(--dim);margin-bottom:36px;letter-spacing:2px}
+.credit-roll{font-family:'Special Elite',serif;font-size:11px;color:var(--dim);margin-top:32px;letter-spacing:2px}
 
 /* Footer */
-footer{border-top:2px solid var(--border);padding:24px 0;text-align:center;font-size:8px;color:#444;letter-spacing:1px}
-footer .credit{color:var(--neon)}
-
-/* HP bar */
-.hp-bar{height:6px;background:#333;border:1px solid #555;margin-top:8px;overflow:hidden}
-.hp-fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--cyan));transition:width 1s}
+footer{border-top:1px solid rgba(139,0,0,.2);padding:24px 0;text-align:center;font-size:12px;color:#333}
+footer span{color:var(--red)}
 
 /* Responsive */
 @media(max-width:768px){
-  .steps,.tech-grid{grid-template-columns:1fr}
-  .levels{grid-template-columns:repeat(2,1fr)}
-  .stats-bar{gap:20px}
-  .score-table{font-size:8px}
-  .score-table th,.score-table td{padding:8px 10px}
-}
-@media(max-width:480px){
-  .levels{grid-template-columns:1fr}
-  .hero{padding:60px 0 40px}
+  .victims,.weapons{grid-template-columns:1fr}
+  .kill-list{grid-template-columns:1fr}
+  .stats{gap:28px}
+  .hero{padding:100px 0 60px}
 }
 </style>
 </head>
@@ -136,191 +121,184 @@ footer .credit{color:var(--neon)}
 
   <!-- Hero -->
   <section class="hero">
-    <div class="badge">🕹️ Autonomous Agents Hackathon SF 2026</div>
-    <div class="hero-title glow">🔪 SLASH</div>
-    <div class="hero-sub"><span class="glow-cyan">AI BILL NEGOTIATION AGENT</span></div>
-    <p style="font-size:9px;color:#888;max-width:500px;margin:0 auto 36px;line-height:2.4">
-      Your bills are the final boss.<br>Slash is the cheat code.
-    </p>
-    <a href="https://github.com/a692570/slash" class="insert-coin">
-      ▶ INSERT COIN ◀
-    </a>
-    <div class="stats-bar">
-      <div class="stat-item">
-        <span class="stat-val glow">$400+</span>
-        <span class="stat-label">avg monthly overpay</span>
+    <div class="tagline">From the creators of "I'll call them tomorrow"</div>
+    <div class="hero-title"><span class="drip">SLASH</span></div>
+    <div class="hero-sub">
+      Your bills have been getting away with murder.<br>
+      Not anymore.
+    </div>
+    <a href="https://github.com/a692570/slash" class="cta">View the Source Code</a>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-val">$400+</span>
+        <span class="stat-label">Monthly Overpay</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-val glow">10%</span>
-        <span class="stat-label">our cut</span>
+      <div class="stat">
+        <span class="stat-val">10%</span>
+        <span class="stat-label">Our Cut</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-val glow">70%+</span>
-        <span class="stat-label">win rate</span>
+      <div class="stat">
+        <span class="stat-val">70%+</span>
+        <span class="stat-label">Kill Rate</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-val glow">4</span>
-        <span class="stat-label">worlds</span>
+      <div class="stat">
+        <span class="stat-val">4</span>
+        <span class="stat-label">Hunting Grounds</span>
       </div>
     </div>
   </section>
+
+  <div class="divider"></div>
 
   <!-- How It Works -->
   <section>
-    <div class="section-header glow-pink">// GAMEPLAY</div>
-    <div class="section-title">HOW TO PLAY</div>
-    <div class="steps">
-      <div class="step">
-        <div class="pixel-box">
-          <div class="step-icon">📋</div>
-          <h3>STAGE 1: LOAD BILL</h3>
-          <p>Enter your provider and current rate. Or scan your CC statement for auto-detect.</p>
-        </div>
+    <div class="section-label">The Method</div>
+    <div class="section-title">Three Strikes. They're Out.</div>
+    <div class="victims">
+      <div class="victim">
+        <div class="victim-num">I</div>
+        <div class="victim-icon">📋</div>
+        <h3>Identify the Target</h3>
+        <p>Upload your bill or scan your credit card statement. We find every recurring charge that's bleeding you dry.</p>
       </div>
-      <div class="step">
-        <div class="pixel-box">
-          <div class="step-icon">📞</div>
-          <h3>STAGE 2: ENGAGE</h3>
-          <p>AI researches competitor rates, then calls your provider's retention department.</p>
-        </div>
+      <div class="victim">
+        <div class="victim-num">II</div>
+        <div class="victim-icon">📞</div>
+        <h3>Make the Call</h3>
+        <p>Our AI agent researches competitor rates, dials the retention department, and goes to work. You don't lift a finger.</p>
       </div>
-      <div class="step">
-        <div class="pixel-box">
-          <div class="step-icon">💰</div>
-          <h3>STAGE 3: VICTORY</h3>
-          <p>Rate drops. You pay 10% of savings. No hold music. No stress. GG.</p>
-        </div>
+      <div class="victim">
+        <div class="victim-num">III</div>
+        <div class="victim-icon">💀</div>
+        <h3>Finish Them</h3>
+        <p>Your rate drops. You keep 90% of the savings. The provider never saw it coming.</p>
       </div>
     </div>
   </section>
 
-  <!-- Level Select (Verticals) -->
+  <div class="divider"></div>
+
+  <!-- Verticals -->
   <section>
-    <div class="section-header glow-pink">// SELECT WORLD</div>
-    <div class="section-title">CHOOSE YOUR BATTLE</div>
-    <div class="levels">
-      <div class="level">
-        <div class="pixel-box">
-          <div class="level-icon">🌐</div>
-          <h3>WORLD 1</h3>
+    <div class="section-label">Hunting Grounds</div>
+    <div class="section-title">No Bill Is Safe.</div>
+    <div class="kill-list">
+      <div class="target">
+        <div class="target-icon">🌐</div>
+        <div>
+          <h3>Internet / Cable</h3>
           <div class="savings">$20-50/mo</div>
-          <div class="enemies">Xfinity / Spectrum / AT&T / Verizon / Cox</div>
-          <div class="hp-bar"><div class="hp-fill" style="width:80%"></div></div>
+          <div class="names">Xfinity, Spectrum, AT&T, Verizon Fios, Cox</div>
         </div>
       </div>
-      <div class="level">
-        <div class="pixel-box">
-          <div class="level-icon">📱</div>
-          <h3>WORLD 2</h3>
+      <div class="target">
+        <div class="target-icon">📱</div>
+        <div>
+          <h3>Cell Phone</h3>
           <div class="savings">$15-40/mo</div>
-          <div class="enemies">T-Mobile / Verizon / AT&T / Mint / Cricket</div>
-          <div class="hp-bar"><div class="hp-fill" style="width:65%"></div></div>
+          <div class="names">T-Mobile, Verizon, AT&T, Mint Mobile, Cricket</div>
         </div>
       </div>
-      <div class="level">
-        <div class="pixel-box">
-          <div class="level-icon">🛡️</div>
-          <h3>WORLD 3</h3>
+      <div class="target">
+        <div class="target-icon">🛡️</div>
+        <div>
+          <h3>Insurance</h3>
           <div class="savings">$30-100/mo</div>
-          <div class="enemies">State Farm / Geico / Progressive / Allstate</div>
-          <div class="hp-bar"><div class="hp-fill" style="width:90%"></div></div>
+          <div class="names">State Farm, Geico, Progressive, Allstate</div>
         </div>
       </div>
-      <div class="level">
-        <div class="pixel-box">
-          <div class="level-icon">🏥</div>
-          <h3>BOSS LEVEL</h3>
-          <div class="savings">20-50% OFF</div>
-          <div class="enemies">Hospitals / Clinics / Labs / Any provider</div>
-          <div class="hp-bar"><div class="hp-fill" style="width:95%"></div></div>
+      <div class="target">
+        <div class="target-icon">🏥</div>
+        <div>
+          <h3>Medical Bills</h3>
+          <div class="savings">20-50% off</div>
+          <div class="names">Hospitals, clinics, labs. Any provider.</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- High Score Table (Pricing) -->
+  <div class="divider"></div>
+
+  <!-- Pricing -->
   <section>
-    <div class="section-header glow-pink">// HIGH SCORES</div>
-    <div class="section-title">LEADERBOARD</div>
-    <div class="pixel-box" style="padding:0;overflow:hidden">
-      <table class="score-table">
+    <div class="section-label">Body Count</div>
+    <div class="section-title">The Competition Didn't Make It.</div>
+    <div class="body-count">
+      <table>
         <thead>
           <tr>
-            <th>PLAYER</th>
-            <th>FEE</th>
-            <th>AI VOICE</th>
-            <th>RESEARCH</th>
-            <th>SCANNER</th>
+            <th>Service</th>
+            <th>Fee</th>
+            <th>AI Voice</th>
+            <th>Research</th>
+            <th>Scanner</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="you">
-            <td>1ST 🔪 SLASH</td>
-            <td class="win">10%</td>
-            <td class="win">YES</td>
-            <td class="win">YES</td>
-            <td class="win">YES</td>
+          <tr class="survivor">
+            <td>🔪 Slash</td>
+            <td class="yes">10%</td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
           </tr>
           <tr>
-            <td>2ND TRIM</td>
-            <td class="lose">25-40%</td>
-            <td class="lose">NO</td>
-            <td>SOME</td>
-            <td class="lose">NO</td>
+            <td>Trim</td>
+            <td>25-40%</td>
+            <td class="no">No</td>
+            <td>Limited</td>
+            <td class="no">No</td>
           </tr>
           <tr>
-            <td>3RD BILLSHARK</td>
-            <td class="lose">40%</td>
-            <td class="lose">NO</td>
-            <td>SOME</td>
-            <td class="lose">NO</td>
+            <td>Billshark</td>
+            <td>40%</td>
+            <td class="no">No</td>
+            <td>Limited</td>
+            <td class="no">No</td>
           </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- Tech Stack -->
+  <div class="divider"></div>
+
+  <!-- Tech -->
   <section>
-    <div class="section-header glow-pink">// POWER-UPS</div>
-    <div class="section-title">ARSENAL</div>
-    <div class="tech-grid">
-      <div class="tech-item">
-        <div class="pixel-box">
-          <h3>🗣️ TELNYX VOICE</h3>
-          <p>Real outbound calls via Call Control. Not chatbot cosplay. Actual phone calls to retention.</p>
-        </div>
+    <div class="section-label">The Weapons</div>
+    <div class="section-title">What's in the Kit.</div>
+    <div class="weapons">
+      <div class="weapon">
+        <h3>🗣️ Telnyx Voice AI</h3>
+        <p>Real outbound calls via Call Control. Actual phone calls to retention departments. Not a chatbot wearing a phone costume.</p>
       </div>
-      <div class="tech-item">
-        <div class="pixel-box">
-          <h3>🔍 TAVILY + NEO4J</h3>
-          <p>Live competitor intel feeds a knowledge graph. Every fight makes the next one easier.</p>
-        </div>
+      <div class="weapon">
+        <h3>🔍 Tavily + Neo4j</h3>
+        <p>Live competitor pricing feeds a knowledge graph. Every negotiation sharpens the blade for the next one.</p>
       </div>
-      <div class="tech-item">
-        <div class="pixel-box">
-          <h3>🧠 OPENAI REALTIME</h3>
-          <p>GPT-4o runs the negotiation. Polite, persistent, armed with data. Escalates when needed.</p>
-        </div>
+      <div class="weapon">
+        <h3>🧠 OpenAI Realtime</h3>
+        <p>GPT-4o runs the negotiation persona. Polite, persistent, relentless. Asks for the supervisor when it has to.</p>
       </div>
     </div>
   </section>
 
-  <!-- Game Over CTA -->
-  <section class="game-over">
-    <h2 class="glow-pink">GAME OVER?</h2>
-    <div class="sub">NOT FOR YOUR WALLET.</div>
-    <a href="https://github.com/a692570/slash" class="insert-coin">
-      ▶ VIEW SOURCE ◀
-    </a>
-    <div class="hi-score">BUILT AT AUTONOMOUS AGENTS HACKATHON SF // FEB 27 2026</div>
+  <div class="divider"></div>
+
+  <!-- Final CTA -->
+  <section class="final">
+    <h2>The Sequel Is Coming.</h2>
+    <div class="sub">Autonomous Agents Hackathon SF // Feb 27, 2026</div>
+    <a href="https://github.com/a692570/slash" class="cta">View on GitHub</a>
+    <div class="credit-roll">A film by Abhishek // Powered by Telnyx</div>
   </section>
 
 </div>
 
 <footer>
   <div class="container">
-    🔪 SLASH // <span class="credit">BUILT BY ABHISHEK</span> // 2026
+    🔪 SLASH // <span>2026</span> // All bills were harmed in the making of this product.
   </div>
 </footer>
 
