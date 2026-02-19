@@ -6,276 +6,256 @@
 <title>Slash</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔪</text></svg>">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#f5f0e8;color:#1a1a1a;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{color:#1a1a1a;text-decoration:none}
-.container{max-width:780px;margin:0 auto;padding:0 24px}
+body{font-family:'Inter',sans-serif;background:#111;color:#fff;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
 
-/* Typography */
-.serif{font-family:'EB Garamond',serif}
-h1,h2,h3,.section-title{font-family:'EB Garamond',serif;font-weight:400}
+/* Full bleed sections */
+.full{width:100%;padding:0 clamp(20px,4vw,48px)}
 
 /* Hero */
-.hero{text-align:center;padding:160px 0 120px;position:relative}
-.hero-above{font-size:11px;letter-spacing:6px;text-transform:uppercase;color:#999;margin-bottom:40px}
-.hero-title{font-size:clamp(80px,16vw,160px);font-weight:400;letter-spacing:-2px;line-height:.85;margin-bottom:32px;color:#1a1a1a}
-.hero-line{width:40px;height:1px;background:#1a1a1a;margin:0 auto 32px}
-.hero-sub{font-family:'EB Garamond',serif;font-size:22px;font-style:italic;color:#666;max-width:400px;margin:0 auto;line-height:1.6}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:64px}
+.hero-badge{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#666;margin-bottom:24px}
+.hero h1{font-size:clamp(64px,12vw,140px);font-weight:900;line-height:.88;letter-spacing:-4px;margin-bottom:24px}
+.hero p{font-size:18px;color:#888;max-width:440px;line-height:1.6;font-weight:400}
 
-/* Scroll prompt */
-.scroll{margin-top:80px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#bbb}
+/* Ticker strip */
+.ticker{background:#fff;color:#111;padding:14px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-block;animation:scroll 20s linear infinite}
+.ticker span{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-right:48px}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* Divider */
-.divider{width:100%;height:1px;background:#d4cec4;margin:0}
+/* Stats strip */
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #222}
+.stats-strip .stat{padding:40px clamp(16px,3vw,32px);border-right:1px solid #222}
+.stats-strip .stat:last-child{border-right:none}
+.stat-val{font-size:clamp(32px,5vw,48px);font-weight:800;letter-spacing:-1px;line-height:1}
+.stat-label{font-size:11px;font-weight:500;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:8px}
 
 /* Section */
-section{padding:80px 0}
-.section-num{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#999;margin-bottom:8px}
-.section-title{font-size:32px;margin-bottom:40px;letter-spacing:-0.5px}
+.section{padding:80px clamp(20px,4vw,48px)}
+.section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:48px;flex-wrap:wrap;gap:12px}
+.section-num{font-size:11px;font-weight:600;color:#555;letter-spacing:3px;text-transform:uppercase}
+.section-title{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-1px}
 
-/* Stats row */
-.stats{display:flex;justify-content:space-between;padding:48px 0;border-top:1px solid #d4cec4;border-bottom:1px solid #d4cec4;margin-bottom:0}
-.stat{text-align:center;flex:1}
-.stat+.stat{border-left:1px solid #d4cec4}
-.stat-val{font-family:'EB Garamond',serif;font-size:48px;font-weight:400;display:block;line-height:1}
-.stat-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999;margin-top:8px}
+/* How it works */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #222}
+.step{padding:32px;border-right:1px solid #222}
+.step:last-child{border-right:none}
+.step-num{font-size:64px;font-weight:900;color:#1a1a1a;line-height:1;margin-bottom:16px;-webkit-text-stroke:1px #333}
+.step h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.step p{font-size:13px;color:#666;line-height:1.7}
 
-/* Method (how it works) */
-.method{counter-reset:step}
-.method-step{display:grid;grid-template-columns:60px 1fr;gap:24px;padding:32px 0;border-bottom:1px solid #e8e2d8}
-.method-step:last-child{border-bottom:none}
-.method-step::before{counter-increment:step;content:counter(step,decimal-leading-zero);font-family:'EB Garamond',serif;font-size:36px;color:#ccc;line-height:1}
-.method-step h3{font-size:18px;font-weight:400;margin-bottom:6px}
-.method-step p{font-size:14px;color:#777;line-height:1.8}
-
-/* Targets (verticals) */
-.targets{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#d4cec4}
-.target-card{background:#f5f0e8;padding:36px 28px}
-.target-card h3{font-size:16px;font-weight:400;margin-bottom:4px}
-.target-card .savings{font-family:'EB Garamond',serif;font-size:28px;margin-bottom:8px}
-.target-card .providers{font-size:12px;color:#999;line-height:1.8}
+/* Verticals grid */
+.verticals{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.vert{padding:40px clamp(20px,3vw,36px);border:1px solid #222;margin-top:-1px;margin-left:-1px}
+.vert h3{font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.vert .amt{font-size:clamp(28px,4vw,36px);font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.vert .names{font-size:12px;color:#555;line-height:1.7}
 
 /* Comparison */
-.comp{width:100%}
-.comp-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1px solid #e8e2d8;padding:14px 0}
+.comp-grid{border:1px solid #222}
+.comp-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-bottom:1px solid #222}
 .comp-row:last-child{border-bottom:none}
-.comp-header{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#999;border-bottom:1px solid #d4cec4}
-.comp-row div{font-size:14px;color:#777}
-.comp-row div:first-child{color:#1a1a1a;font-family:'EB Garamond',serif;font-size:16px}
-.comp-row.slash div{color:#1a1a1a;font-weight:500}
-.comp-row.slash div:first-child{font-weight:700}
-.yes{color:#1a1a1a}
-.no{color:#ccc}
+.comp-row div{padding:16px 24px;font-size:14px;border-right:1px solid #222}
+.comp-row div:last-child{border-right:none}
+.comp-header div{font-size:11px;font-weight:600;color:#555;letter-spacing:2px;text-transform:uppercase}
+.comp-slash{background:rgba(255,255,255,.03)}
+.comp-slash div{font-weight:700}
+.dim{color:#333}
 
-/* Stack */
-.stack{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#d4cec4}
-.stack-item{background:#f5f0e8;padding:32px 24px}
-.stack-item h3{font-size:15px;font-weight:400;margin-bottom:8px}
-.stack-item p{font-size:13px;color:#999;line-height:1.8}
+/* Tech */
+.tech{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #222}
+.tech-item{padding:32px;border-right:1px solid #222}
+.tech-item:last-child{border-right:none}
+.tech-item h3{font-size:15px;font-weight:700;margin-bottom:8px}
+.tech-item p{font-size:13px;color:#666;line-height:1.7}
 
 /* CTA */
-.cta-section{text-align:center;padding:120px 0}
-.cta-section h2{font-size:clamp(36px,6vw,56px);letter-spacing:-1px;margin-bottom:12px}
-.cta-section p{font-family:'EB Garamond',serif;font-style:italic;color:#999;font-size:18px;margin-bottom:40px}
-.cta-btn{display:inline-block;font-size:12px;letter-spacing:4px;text-transform:uppercase;border:1px solid #1a1a1a;padding:16px 40px;transition:all .3s}
-.cta-btn:hover{background:#1a1a1a;color:#f5f0e8}
+.cta{display:flex;justify-content:space-between;align-items:center;padding:64px clamp(20px,4vw,48px);border-top:1px solid #222;flex-wrap:wrap;gap:24px}
+.cta h2{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-1px}
+.cta-btn{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:1px solid #fff;padding:16px 36px;transition:all .2s}
+.cta-btn:hover{background:#fff;color:#111}
 
 /* Footer */
-footer{border-top:1px solid #d4cec4;padding:32px 0;text-align:center;font-size:11px;color:#bbb;letter-spacing:2px}
+footer{padding:24px clamp(20px,4vw,48px);font-size:11px;color:#333;letter-spacing:1px;border-top:1px solid #222;display:flex;justify-content:space-between}
 
 /* Responsive */
 @media(max-width:768px){
-  .stats{flex-direction:column;gap:32px}
-  .stat+.stat{border-left:none;border-top:1px solid #d4cec4;padding-top:32px}
-  .targets,.stack{grid-template-columns:1fr}
-  .comp-row{grid-template-columns:1fr 1fr;gap:8px}
-  .hero{padding:100px 0 80px}
+  .stats-strip{grid-template-columns:repeat(2,1fr)}
+  .stats-strip .stat:nth-child(2){border-right:none}
+  .steps{grid-template-columns:1fr}
+  .step{border-right:none;border-bottom:1px solid #222}
+  .step:last-child{border-bottom:none}
+  .verticals{grid-template-columns:1fr}
+  .tech{grid-template-columns:1fr}
+  .tech-item{border-right:none;border-bottom:1px solid #222}
+  .tech-item:last-child{border-bottom:none}
+  .comp-row{grid-template-columns:1.5fr 1fr 1fr 1fr}
+  .cta{flex-direction:column;text-align:center}
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-
-  <!-- Hero -->
+<!-- Hero -->
+<div class="full">
   <section class="hero">
-    <div class="hero-above">Autonomous Agents Hackathon SF</div>
-    <h1 class="hero-title">Slash</h1>
-    <div class="hero-line"></div>
-    <div class="hero-sub">Your bills have been getting away with it for too long.</div>
-    <div class="scroll">Scroll</div>
+    <div class="hero-badge">Autonomous Agents Hackathon SF / Feb 27</div>
+    <h1>Slash</h1>
+    <p>An AI agent that calls your providers and negotiates your bills down. You do nothing. It takes 10%.</p>
   </section>
 </div>
 
-<div class="divider"></div>
+<!-- Ticker -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>Internet</span><span>Cell Phone</span><span>Insurance</span><span>Medical</span><span>Xfinity</span><span>T-Mobile</span><span>Geico</span><span>Spectrum</span><span>AT&T</span><span>Verizon</span><span>Progressive</span><span>Allstate</span>
+    <span>Internet</span><span>Cell Phone</span><span>Insurance</span><span>Medical</span><span>Xfinity</span><span>T-Mobile</span><span>Geico</span><span>Spectrum</span><span>AT&T</span><span>Verizon</span><span>Progressive</span><span>Allstate</span>
+  </div>
+</div>
 
 <!-- Stats -->
-<div class="container">
-  <div class="stats">
-    <div class="stat">
-      <span class="stat-val">$400+</span>
-      <span class="stat-label">Monthly Overpay</span>
-    </div>
-    <div class="stat">
-      <span class="stat-val">10%</span>
-      <span class="stat-label">Our Cut</span>
-    </div>
-    <div class="stat">
-      <span class="stat-val">70%</span>
-      <span class="stat-label">Kill Rate</span>
-    </div>
-    <div class="stat">
-      <span class="stat-val">4</span>
-      <span class="stat-label">Verticals</span>
-    </div>
+<div class="stats-strip">
+  <div class="stat">
+    <div class="stat-val">$400+</div>
+    <div class="stat-label">Monthly Overpay</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">10%</div>
+    <div class="stat-label">Our Fee</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">70%+</div>
+    <div class="stat-label">Success Rate</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">4</div>
+    <div class="stat-label">Verticals</div>
   </div>
 </div>
 
-<div class="container">
-
-  <!-- How It Works -->
-  <section>
-    <div class="section-num">I. The Method</div>
-    <div class="section-title">You do nothing. We handle it.</div>
-    <div class="method">
-      <div class="method-step">
-        <div></div>
-        <div>
-          <h3>Add your bill</h3>
-          <p>Enter your provider and current rate. Or upload a credit card statement and let us find what's costing you.</p>
-        </div>
-      </div>
-      <div class="method-step">
-        <div></div>
-        <div>
-          <h3>We research, then call</h3>
-          <p>AI scrapes competitor pricing. Builds a strategy. Dials the retention department. Negotiates like it does this for a living. Because it does.</p>
-        </div>
-      </div>
-      <div class="method-step">
-        <div></div>
-        <div>
-          <h3>Your rate drops</h3>
-          <p>You keep 90% of the savings. No hold music, no anxiety, no "can I speak to your manager" energy. Just results.</p>
-        </div>
-      </div>
+<!-- How It Works -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-title">How it works</div>
+    <div class="section-num">01</div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Add your bill</h3>
+      <p>Enter your provider and rate. Or scan a credit card statement and we detect recurring charges automatically.</p>
     </div>
-  </section>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>AI calls for you</h3>
+      <p>We research competitor rates, build a strategy, and call the retention department. Real phone call, real negotiation.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Rate drops</h3>
+      <p>Your bill goes down. You pay 10% of what you saved. No hold music, no stress, no wasted afternoon.</p>
+    </div>
+  </div>
 </div>
-
-<div class="divider"></div>
 
 <!-- Verticals -->
-<div class="container">
-  <section>
-    <div class="section-num">II. The Targets</div>
-    <div class="section-title">Four ways you're overpaying.</div>
-  </section>
-</div>
-<div class="container" style="padding:0">
-  <div class="targets">
-    <div class="target-card">
+<div class="section" style="padding-top:0">
+  <div class="section-head">
+    <div class="section-title">What we negotiate</div>
+    <div class="section-num">02</div>
+  </div>
+  <div class="verticals">
+    <div class="vert">
       <h3>Internet / Cable</h3>
-      <div class="savings">$20 - 50/mo</div>
-      <div class="providers">Xfinity, Spectrum, AT&T, Verizon Fios, Cox, Optimum</div>
+      <div class="amt">$20-50/mo</div>
+      <div class="names">Xfinity, Spectrum, AT&T, Verizon Fios, Cox, Optimum</div>
     </div>
-    <div class="target-card">
+    <div class="vert">
       <h3>Cell Phone</h3>
-      <div class="savings">$15 - 40/mo</div>
-      <div class="providers">T-Mobile, Verizon, AT&T, Mint Mobile, Cricket</div>
+      <div class="amt">$15-40/mo</div>
+      <div class="names">T-Mobile, Verizon, AT&T, Mint Mobile, Cricket</div>
     </div>
-    <div class="target-card">
+    <div class="vert">
       <h3>Insurance</h3>
-      <div class="savings">$30 - 100/mo</div>
-      <div class="providers">State Farm, Geico, Progressive, Allstate, Liberty Mutual</div>
+      <div class="amt">$30-100/mo</div>
+      <div class="names">State Farm, Geico, Progressive, Allstate, Liberty Mutual</div>
     </div>
-    <div class="target-card">
+    <div class="vert">
       <h3>Medical Bills</h3>
-      <div class="savings">20 - 50% off</div>
-      <div class="providers">Hospitals, clinics, labs. Any provider you enter.</div>
+      <div class="amt">20-50% off</div>
+      <div class="names">Hospitals, clinics, labs. Any provider.</div>
     </div>
   </div>
 </div>
 
-<div class="divider" style="margin-top:0"></div>
-
-<div class="container">
-
-  <!-- Comparison -->
-  <section>
-    <div class="section-num">III. The Competition</div>
-    <div class="section-title">They charge 40%. We charge 10%.</div>
-    <div class="comp">
-      <div class="comp-row comp-header">
-        <div>Service</div>
-        <div>Fee</div>
-        <div>AI Calls</div>
-        <div>Research</div>
-      </div>
-      <div class="comp-row slash">
-        <div>Slash</div>
-        <div>10%</div>
-        <div class="yes">Yes</div>
-        <div class="yes">Yes</div>
-      </div>
-      <div class="comp-row">
-        <div>Trim</div>
-        <div>25 - 40%</div>
-        <div class="no">No</div>
-        <div>Limited</div>
-      </div>
-      <div class="comp-row">
-        <div>Billshark</div>
-        <div>40%</div>
-        <div class="no">No</div>
-        <div>Limited</div>
-      </div>
+<!-- Comparison -->
+<div class="section" style="padding-top:0">
+  <div class="section-head">
+    <div class="section-title">vs. the others</div>
+    <div class="section-num">03</div>
+  </div>
+  <div class="comp-grid">
+    <div class="comp-row comp-header">
+      <div>Service</div>
+      <div>Fee</div>
+      <div>AI Voice</div>
+      <div>Research</div>
     </div>
-  </section>
+    <div class="comp-row comp-slash">
+      <div>Slash</div>
+      <div>10%</div>
+      <div>Yes</div>
+      <div>Yes</div>
+    </div>
+    <div class="comp-row">
+      <div>Trim</div>
+      <div>25-40%</div>
+      <div class="dim">No</div>
+      <div>Limited</div>
+    </div>
+    <div class="comp-row">
+      <div>Billshark</div>
+      <div>40%</div>
+      <div class="dim">No</div>
+      <div>Limited</div>
+    </div>
+  </div>
 </div>
-
-<div class="divider"></div>
 
 <!-- Tech -->
-<div class="container" style="padding-left:0;padding-right:0">
-  <section style="padding-bottom:0">
-    <div style="padding:0 24px">
-      <div class="section-num">IV. The Weapons</div>
-      <div class="section-title">What's under the hood.</div>
-    </div>
-  </section>
-  <div class="stack">
-    <div class="stack-item">
+<div class="section" style="padding-top:0">
+  <div class="section-head">
+    <div class="section-title">Under the hood</div>
+    <div class="section-num">04</div>
+  </div>
+  <div class="tech">
+    <div class="tech-item">
       <h3>Telnyx Voice AI</h3>
-      <p>Real outbound phone calls via Call Control. Not a chatbot. An actual voice agent calling retention departments.</p>
+      <p>Real outbound calls via Call Control. Actual phone calls to retention departments, not chatbot theater.</p>
     </div>
-    <div class="stack-item">
+    <div class="tech-item">
       <h3>Tavily + Neo4j</h3>
-      <p>Live competitor research feeds a knowledge graph. Every negotiation makes the next one sharper.</p>
+      <p>Live competitor research feeds a knowledge graph. Every negotiation makes the next one smarter.</p>
     </div>
-    <div class="stack-item">
+    <div class="tech-item">
       <h3>OpenAI Realtime</h3>
-      <p>GPT-4o powers the voice. Polite. Persistent. Armed with data. Escalates when it needs to.</p>
+      <p>GPT-4o powers the negotiation. Polite, persistent, data-armed. Escalates to supervisors when needed.</p>
     </div>
   </div>
 </div>
 
-<div class="divider"></div>
-
-<div class="container">
-  <!-- CTA -->
-  <section class="cta-section">
-    <h2>The sequel writes itself.</h2>
-    <p>Hackathon SF, February 27, 2026.</p>
-    <a href="https://github.com/a692570/slash" class="cta-btn">View Source</a>
-  </section>
+<!-- CTA -->
+<div class="cta">
+  <h2>Your bills won't cut themselves.</h2>
+  <a href="https://github.com/a692570/slash" class="cta-btn">View Source</a>
 </div>
 
 <footer>
-  <div class="container">
-    Slash // Built by Abhishek // 2026
-  </div>
+  <span>Slash / 2026</span>
+  <span>Built by Abhishek</span>
 </footer>
 
 </body>
