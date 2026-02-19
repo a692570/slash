@@ -55,9 +55,12 @@ a{color:inherit;text-decoration:none}
 
 /* How it works */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #222}
-.step{padding:32px;border-right:1px solid #222}
+.step{padding:32px;border-right:1px solid #222;transition:all .3s ease;cursor:default}
+.step:hover{transform:translateY(-6px);background:rgba(204,34,51,.06);border-color:#cc2233;box-shadow:0 8px 30px rgba(204,34,51,.15)}
 .step:last-child{border-right:none}
-.step-num{font-size:64px;font-weight:900;color:#1a1a1a;line-height:1;margin-bottom:16px;-webkit-text-stroke:1px #333}
+.step:last-child:hover{border-right:none}
+.step-num{font-size:64px;font-weight:900;color:#1a1a1a;line-height:1;margin-bottom:16px;-webkit-text-stroke:1px #333;transition:all .3s ease}
+.step:hover .step-num{color:#cc2233;-webkit-text-stroke:1px #cc2233}
 .step h3{font-size:16px;font-weight:700;margin-bottom:8px}
 .step p{font-size:13px;color:#666;line-height:1.7}
 
@@ -146,7 +149,9 @@ footer{padding:24px clamp(20px,4vw,48px);font-size:11px;color:#333;letter-spacin
         <!-- Knife blade -->
         <polygon points="325,335 350,355 340,360 315,340" fill="#fff" opacity="0.9"/>
         <!-- Knife handle -->
-        <rect x="340" y="349" width="36" height="14" rx="3" fill="#555" transform="rotate(45 340 349)"/>
+        <rect x="340" y="349" width="36" height="14" rx="3" fill="#cc2233" transform="rotate(45 340 349)"/>
+        <rect x="348" y="353" width="4" height="6" rx="1" fill="#991a28" transform="rotate(45 348 353)"/>
+        <rect x="358" y="363" width="4" height="6" rx="1" fill="#991a28" transform="rotate(45 358 363)"/>
         <!-- Cut effect lines -->
         <line x1="155" y1="145" x2="140" y2="155" stroke="#fff" stroke-width="1" opacity="0.3"/>
         <line x1="175" y1="165" x2="160" y2="175" stroke="#fff" stroke-width="1" opacity="0.2"/>
