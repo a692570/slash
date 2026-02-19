@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slash - AI Bill Negotiation Agent</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔪</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#00ff88;--bg:#0a0a0a;--card:#141414;--border:#262626;--gray:#888;--dim:#666}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--green);text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);color:var(--green);font-size:13px;font-weight:500;padding:6px 14px;border-radius:100px;margin-bottom:24px}
+.badge::before{content:"";width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Hero */
+.hero{text-align:center;padding:120px 0 80px}
+.hero h1{font-size:clamp(48px,8vw,80px);font-weight:800;letter-spacing:-2px;line-height:1.05;margin-bottom:20px}
+.hero h1 .accent{color:var(--green)}
+.hero p{font-size:20px;color:var(--gray);max-width:560px;margin:0 auto 40px}
+.hero-cta{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#000;font-size:16px;font-weight:600;padding:14px 32px;border-radius:12px;transition:background .2s}
+.hero-cta:hover{background:#00dd77;color:#000}
+.hero-stats{display:flex;justify-content:center;gap:48px;margin-top:60px;flex-wrap:wrap}
+.hero-stats .stat{text-align:center}
+.hero-stats .stat-val{font-size:36px;font-weight:700;color:var(--green)}
+.hero-stats .stat-label{font-size:14px;color:var(--gray);margin-top:4px}
+
+/* Section */
+section{padding:80px 0}
+.section-label{font-size:13px;text-transform:uppercase;letter-spacing:2px;color:var(--green);font-weight:600;margin-bottom:12px}
+.section-title{font-size:36px;font-weight:700;letter-spacing:-1px;margin-bottom:16px}
+.section-desc{color:var(--gray);font-size:18px;max-width:520px;margin-bottom:48px}
+
+/* How it works */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;transition:border-color .2s}
+.step:hover{border-color:#333}
+.step-num{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:rgba(0,255,136,.1);color:var(--green);font-weight:700;font-size:16px;margin-bottom:20px}
+.step h3{font-size:18px;font-weight:600;margin-bottom:8px}
+.step p{color:var(--gray);font-size:15px}
+
+/* Verticals */
+.verticals{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.vertical{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;text-align:center;transition:border-color .2s}
+.vertical:hover{border-color:#333}
+.vertical-icon{font-size:36px;margin-bottom:16px}
+.vertical h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.vertical p{color:var(--green);font-size:15px;font-weight:600}
+.vertical .sub{color:var(--dim);font-size:13px;margin-top:4px}
+
+/* Pricing comparison */
+.pricing-table{width:100%;border-collapse:collapse;background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.pricing-table th,.pricing-table td{padding:16px 24px;text-align:left;border-bottom:1px solid var(--border)}
+.pricing-table th{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);font-weight:600;background:#111}
+.pricing-table td{font-size:15px}
+.pricing-table tr:last-child td{border-bottom:none}
+.pricing-table .highlight{background:rgba(0,255,136,.05)}
+.pricing-table .highlight td:first-child{color:var(--green);font-weight:700}
+.check{color:var(--green)}
+.cross{color:#ff4444}
+
+/* CTA */
+.cta-section{text-align:center;padding:100px 0 120px}
+.cta-section h2{font-size:42px;font-weight:700;letter-spacing:-1px;margin-bottom:16px}
+.cta-section p{color:var(--gray);font-size:18px;margin-bottom:36px}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--dim);font-size:14px}
+footer span{color:var(--gray)}
+
+/* Responsive */
+@media(max-width:768px){
+  .steps{grid-template-columns:1fr}
+  .verticals{grid-template-columns:repeat(2,1fr)}
+  .hero-stats{gap:32px}
+  .pricing-table{font-size:14px}
+  .pricing-table th,.pricing-table td{padding:12px 16px}
+}
+@media(max-width:480px){
+  .verticals{grid-template-columns:1fr}
+  .hero{padding:80px 0 60px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="badge">Autonomous Agents Hackathon SF</div>
+    <h1>🔪 Stop overpaying.<br><span class="accent">Let AI negotiate.</span></h1>
+    <p>Slash calls your providers, negotiates lower rates, and saves you money. Fully autonomous. 10% fee, not 40%.</p>
+    <a href="#how" class="hero-cta">See How It Works ↓</a>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val">$400+</div>
+        <div class="stat-label">avg monthly overpay</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">10%</div>
+        <div class="stat-label">our fee (not 40%)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">70%+</div>
+        <div class="stat-label">success rate</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">4</div>
+        <div class="stat-label">bill verticals</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how">
+    <div class="section-label">How It Works</div>
+    <div class="section-title">Three steps. You do nothing.</div>
+    <div class="section-desc">Add your bill, authorize the call, and watch your rate drop.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Add Your Bill</h3>
+        <p>Enter your provider, current rate, and account number. Or scan your credit card statement and we detect bills automatically.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>AI Researches + Calls</h3>
+        <p>Slash scrapes competitor pricing, builds a negotiation strategy, and calls your provider's retention department.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>You Save Money</h3>
+        <p>Your rate drops. You pay 10% of what you saved. That's it. No hold music, no stress, no phone calls.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Verticals -->
+  <section>
+    <div class="section-label">What We Negotiate</div>
+    <div class="section-title">Four verticals. One agent.</div>
+    <div class="section-desc">From Comcast to medical bills, Slash handles it all.</div>
+    <div class="verticals">
+      <div class="vertical">
+        <div class="vertical-icon">🌐</div>
+        <h3>Internet / Cable</h3>
+        <p>$20-50/mo</p>
+        <div class="sub">Xfinity, Spectrum, AT&T, Verizon, Cox</div>
+      </div>
+      <div class="vertical">
+        <div class="vertical-icon">📱</div>
+        <h3>Cell Phone</h3>
+        <p>$15-40/mo</p>
+        <div class="sub">T-Mobile, Verizon, AT&T, Mint, Cricket</div>
+      </div>
+      <div class="vertical">
+        <div class="vertical-icon">🛡️</div>
+        <h3>Insurance</h3>
+        <p>$30-100/mo</p>
+        <div class="sub">State Farm, Geico, Progressive, Allstate</div>
+      </div>
+      <div class="vertical">
+        <div class="vertical-icon">🏥</div>
+        <h3>Medical Bills</h3>
+        <p>20-50% off</p>
+        <div class="sub">Hospitals, clinics, labs, any provider</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Comparison -->
+  <section>
+    <div class="section-label">Why Slash</div>
+    <div class="section-title">We take 10%. They take 40%.</div>
+    <div class="section-desc">Same result, fraction of the cost.</div>
+    <table class="pricing-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Slash</th>
+          <th>Trim</th>
+          <th>Billshark</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>Fee</td>
+          <td>10%</td>
+          <td>25-40%</td>
+          <td>40%</td>
+        </tr>
+        <tr>
+          <td>AI Voice Calls</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>Competitor Research</td>
+          <td class="check">✓</td>
+          <td>Limited</td>
+          <td>Limited</td>
+        </tr>
+        <tr>
+          <td>Knowledge Graph</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>CC Statement Scanner</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>Verticals</td>
+          <td>4</td>
+          <td>Broad</td>
+          <td>Broad</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Tech Stack -->
+  <section>
+    <div class="section-label">Under the Hood</div>
+    <div class="section-title">Built with serious infrastructure.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">🗣️</div>
+        <h3>Telnyx Voice AI</h3>
+        <p>Real phone calls via Telnyx Call Control. Not chatbot roleplay. Actual outbound calls to retention departments.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">🔍</div>
+        <h3>Tavily + Neo4j</h3>
+        <p>Live competitor pricing research feeds a knowledge graph. Every negotiation makes the next one smarter.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">🧠</div>
+        <h3>OpenAI Realtime</h3>
+        <p>GPT-4o powers the negotiation persona. Polite, persistent, and armed with data. Escalates to supervisors when needed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Your bills are too high.<br>Fix that.</h2>
+    <p>Slash is launching soon. Built at the Autonomous Agents Hackathon SF, Feb 27, 2026.</p>
+    <a href="https://github.com/a692570/slash" class="hero-cta">View on GitHub →</a>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    🔪 Slash &middot; <span>Built by Abhishek</span> &middot; Autonomous Agents Hackathon SF 2026
+  </div>
+</footer>
+
+</body>
+</html>
