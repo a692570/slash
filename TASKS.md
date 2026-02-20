@@ -41,35 +41,30 @@
 ### 🔴 P0 - Must Have for Demo Day (Critical Path)
 
 #### T1: Voice Agent Rewrite ⬜
-**Owner:** TBD | **Est:** 2-3 days | **Blocked by:** Telnyx account setup
-**What:** Rewrite `src/services/voice.ts` to use real Telnyx APIs.
-**Approach:**
-- Option A: Telnyx Call Control + OpenAI Realtime API (bidirectional WebSocket audio streaming). This is the real deal. Telnyx sends RTP audio via WebSocket, OpenAI processes it in realtime.
-- Option B: Telnyx Voice API with pre-built AI features (if available). Simpler but less flexible.
-**Files:** `src/services/voice.ts`, new `src/services/openai-realtime.ts`
-**Acceptance:** Can make a real outbound call to a test number, AI speaks, listens, responds.
-**Research needed:** Check Telnyx docs for Call Control WebSocket streaming + OpenAI Realtime API integration patterns.
+**Owner:** Crabishek | **Est:** 1-2 days | **Blocked by:** Nothing (creds ready)
+**What:** Rewrite `src/services/voice.ts` to use Telnyx AI Assistants.
+**Approach:** 
+1. Create a "Slash Bill Negotiator" assistant via `POST /v2/ai/assistants` with negotiation instructions, GPT-4o model, MiniMax voice, Deepgram transcription.
+2. Outbound call: `POST /v2/calls` (Dial) to provider retention number.
+3. On call answer: `POST /v2/calls/{call_control_id}/actions/ai_assistant_start` with assistant ID + dynamic instructions (bill details, competitor rates, tactics).
+4. Webhooks: `call.conversation.ended` for results, `call.conversation_insights.generated` for transcript.
+**Files:** `src/services/voice.ts` (rewrite), `src/services/assistant.ts` (new, manages Telnyx AI Assistant)
+**Acceptance:** Can make a real outbound call to a test number, AI speaks the negotiation greeting, converses, and we get transcript back.
+**Reference:** Existing assistant pattern from "Crabishek Voice Agent" (assistant-5bf76f01) on the account.
 
-#### T2: Telnyx Account Setup ⬜
-**Owner:** Abhishek | **Est:** 30 min
-**What:** Get Telnyx API key, buy a phone number, create a Call Control connection.
-**Output:** Fill `.env` with real `TELNYX_API_KEY`, `TELNYX_PHONE_NUMBER`, `TELNYX_CONNECTION_ID`.
-**Note:** Abhishek works at Telnyx so this should be quick.
+#### T2: Telnyx Account Setup ✅ DONE
+**What:** API key, phone number (+14155491552), Call Control connection (2888193300928398948), Tavily key. All in `.env`.
 
-#### T3: Deploy Backend (Render) ⬜
-**Owner:** TBD | **Est:** 2-3 hours
-**What:** Create `render.yaml` or `Dockerfile`. Deploy Express backend to Render free tier.
+#### T3: Deploy on Render ⬜
+**Owner:** Crabishek | **Est:** 2-3 hours
+**What:** Create `render.yaml`. Deploy Express backend + serve React frontend from Express. Single service.
 **Requirements:**
-- Public URL for Telnyx webhooks
-- Environment variables configured
-- Health check endpoint already exists at `/health`
-**Files:** New `render.yaml` or `Dockerfile`, update `package.json` scripts
-
-#### T4: Deploy Frontend ⬜
-**Owner:** TBD | **Est:** 1-2 hours
-**What:** Deploy React frontend. Options: Render static site, Vercel, or just serve from Express.
-**Simplest:** Serve built frontend from Express (`app.use(express.static('frontend/dist'))`)
-**Files:** Update `src/index.ts`, add build script
+- Public URL for Telnyx webhooks (call.conversation.ended, call.answered, etc.)
+- Environment variables configured on Render dashboard
+- Health check at `/health` (already exists)
+- Serve frontend: `app.use(express.static('frontend/dist'))` in src/index.ts
+**Files:** New `render.yaml`, update `src/index.ts`, update `package.json` build scripts
+**Why Render:** 2 judges from Render. Free points.
 
 #### T5: Demo Flow (End-to-End) ⬜
 **Owner:** TBD | **Est:** 1 day
@@ -79,10 +74,10 @@
 ### 🟡 P1 - Should Have (Makes Demo Impressive)
 
 #### T6: Neo4j Setup ⬜
-**Owner:** TBD | **Est:** 2-3 hours
+**Owner:** Crabishek | **Est:** 2-3 hours
 **What:** Provision Neo4j Aura Free instance. Seed with provider data. Connect `graph.ts`.
 **Output:** Working knowledge graph that gets smarter with each negotiation.
-**Can fake:** Hardcode leverage data in strategy engine if Neo4j is too slow to set up.
+**MUST DO:** Neo4j is a sponsor. Real instance required, no faking.
 
 #### T7: Seed Demo Data ⬜
 **Owner:** TBD | **Est:** 1-2 hours
@@ -113,34 +108,70 @@
 **Owner:** TBD | **Est:** Ongoing
 **What:** Continue iterating on `index.html`. Add demo video when ready.
 
+#### T13: Modulate Velma Integration ⬜
+**Owner:** Crabishek + Abhishek | **Est:** 3-4 hours (at event)
+**What:** Integrate Modulate's Velma voice intelligence to monitor negotiation calls.
+**Approach:** 
+- Research Velma API before event (preview.modulate.ai)
+- At event: get API access from Modulate team (Carter/Graham are judges, will be on-site)
+- Pipe call audio or use webhook integration for real-time voice monitoring
+- Show monitoring dashboard: emotion detection, escalation alerts, call quality score
+**Why:** 2 judges from Modulate (CTO + COO). This is the highest-value integration.
+**Prep before event:** Stub out the integration code so we just plug in API keys on-site.
+
 #### T12: Pitch Deck / Demo Script ⬜
 **Owner:** Abhishek + AI | **Est:** 1 day (closer to event)
 **What:** 3-minute pitch. Problem > Solution > Demo > Market > Ask.
 
 ---
 
-## Recommended Sprint Plan (Feb 19-27)
+## Key Decisions (Made)
+
+1. **Voice approach:** Telnyx AI Assistants. Dial via Call Control, then `ai_assistant_start`. Telnyx handles GPT-4o, MiniMax TTS, Deepgram STT. No OpenAI key needed (swap at event if they provide one).
+2. **Neo4j:** Spin up Aura Free. It's a sponsor, so must be real.
+3. **Auth:** Skip. "Login as Demo User" button. Judges don't care.
+4. **Deploy target:** Render. Two Render judges. Non-negotiable.
+5. **Modulate integration:** Pipe call audio through Velma for voice safety monitoring. Two Modulate judges (CTO + COO). Highest priority sponsor integration.
+
+## Sponsor Integration Checklist
+
+| Sponsor | Integration | Status | Priority |
+|---------|------------|--------|----------|
+| Tavily | Competitor research API | ✅ Code exists, API key configured | Done |
+| Neo4j | Knowledge graph for provider data | 🔲 Code exists, need Aura Free instance | HIGH (sponsor) |
+| Render | Deployment platform | 🔲 Need render.yaml | HIGH (2 judges) |
+| Modulate | Velma voice monitoring on calls | 🔲 Research API, integrate at event | HIGH (2 judges) |
+| OpenAI | GPT-4o via Telnyx AI Assistants | ✅ Indirect (Telnyx handles it) | Done |
+| AWS | Could use for call recordings (S3) | 🔲 Stretch goal | LOW |
+| Yutori | Pitch framing (autonomous agent) | N/A - narrative only | MED (1 judge) |
+| Senso | Pitch framing (knowledge for CX) | N/A - narrative only | LOW |
+| Numeric | Pitch framing (financial data) | N/A - narrative only | LOW |
+
+## Hackathon Day Schedule (Feb 27)
+
+- 9:30 AM: Doors open
+- 9:45 AM: Keynote
+- 11:00 AM: START CODING (5.5 hrs only!)
+- 1:30 PM: Lunch
+- 4:30 PM: SUBMISSION DEADLINE
+- 5:00 PM: Finalists present
+- 7:00 PM: Awards
+
+**⚠️ Only 5.5 hours at event. Everything must work BEFORE we walk in. Event time = Modulate integration + polish + demo prep.**
+
+## Sprint Plan (Feb 19-27)
 
 | Day | Date | Focus | Tasks |
 |-----|------|-------|-------|
-| 1 | Feb 19 (Wed) | Setup + Research | T2 (Telnyx creds), Research Telnyx Call Control + OpenAI Realtime patterns |
-| 2 | Feb 20 (Thu) | Voice Agent | T1 start: Build OpenAI Realtime integration |
-| 3 | Feb 21 (Fri) | Voice Agent | T1 finish: End-to-end call working |
-| 4 | Feb 22 (Sat) | Deploy + Seed | T3, T4, T7: Deploy both services, seed demo data |
-| 5 | Feb 23 (Sun) | Integration | T5: Wire full demo flow end-to-end |
-| 6 | Feb 24 (Mon) | Polish | T6 (Neo4j), T8 (auth), T9 (live updates) |
-| 7 | Feb 25 (Tue) | Polish | T10, T11, bug fixes |
-| 8 | Feb 26 (Wed) | Demo prep | T12: Pitch deck, rehearse, final fixes |
-| 9 | Feb 27 (Thu) | 🏆 HACKATHON DAY | Ship it. Win it. |
-
----
-
-## Key Decisions Needed
-
-1. **Voice approach:** Telnyx Call Control + OpenAI Realtime (complex but real) vs simplified TTS/STT flow (faster to build)?
-2. **Neo4j:** Real instance or fake the leverage data for demo?
-3. **Auth:** Real JWT or "Login as Demo User" button?
-4. **Deploy target:** Render (free tier) or something else?
+| 1 | Feb 19 (Wed) | Setup | ✅ Telnyx creds, Tavily key, hackathon research |
+| 2 | Feb 20 (Thu) | Voice Agent | T1: Rewrite voice.ts for Telnyx AI Assistants (Dial + ai_assistant_start). Create Slash negotiator assistant. |
+| 3 | Feb 21 (Fri) | Voice Agent + Render | T1 finish + T3: End-to-end call working. Create render.yaml, deploy. |
+| 4 | Feb 22 (Sat) | Neo4j + Seed | T6 + T7: Spin up Neo4j Aura Free, seed provider data, seed demo bills. |
+| 5 | Feb 23 (Sun) | Full Integration | T5: Wire full demo flow. Add bill > Tavily research > Strategy > Call > Result. |
+| 6 | Feb 24 (Mon) | Frontend + Live Updates | T9: WebSocket/SSE for live call transcript. Polish dashboard. |
+| 7 | Feb 25 (Tue) | Modulate Research | Research Velma API. Prep integration code (finish at event). Bug fixes. |
+| 8 | Feb 26 (Wed) | Demo Prep | T12: Pitch deck (3 min). Rehearse. Name-drop every sponsor. Final fixes. |
+| 9 | Feb 27 (Thu) | 🏆 HACKATHON | Modulate integration on-site. Polish. Demo. Win $47k. |
 
 ---
 
