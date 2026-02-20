@@ -74,6 +74,12 @@
 
 ### 🟡 P1 - Should Have (Makes Demo Impressive)
 
+#### T10: Yutori Browsing Integration ⬜
+**Owner:** Crabishek | **Est:** 3-4 hours
+**What:** Create `src/services/yutori.ts` — a TypeScript client wrapping Yutori's REST API (Browsing + Research endpoints). Integrate into the research pipeline alongside Tavily. Use Yutori Research API for deeper competitor pricing analysis, and Browsing API to find provider retention phone numbers.
+**Acceptance:** Can call Yutori to research a provider and get structured competitor data back. Falls back to Tavily-only if Yutori key not set.
+**Note:** Yutori is a sponsor with 1 judge (chief scientist). Integration scores prize track points.
+
 #### T6: Neo4j Setup ⬜
 **Owner:** Crabishek | **Est:** 2-3 hours
 **What:** Provision Neo4j Aura Free instance. Seed with provider data. Connect `graph.ts`.
@@ -168,7 +174,7 @@
 | 2 | Feb 20 (Thu) | Voice Agent | T1: Rewrite voice.ts for Telnyx AI Assistants (Dial + ai_assistant_start). Create Slash negotiator assistant. |
 | 3 | Feb 21 (Fri) | Voice Agent + Render | T1 finish + T3: End-to-end call working. Create render.yaml, deploy. |
 | 4 | Feb 22 (Sat) | Neo4j + Seed | T6 + T7: Spin up Neo4j Aura Free, seed provider data, seed demo bills. |
-| 5 | Feb 23 (Sun) | Full Integration | T5: Wire full demo flow. Add bill > Tavily research > Strategy > Call > Result. |
+| 5 | Feb 23 (Sun) | Full Integration | T5 + T10: Wire full demo flow. Add bill > Tavily/Yutori research > Strategy > Call > Result. Integrate Yutori for deep research + retention phone lookup. |
 | 6 | Feb 24 (Mon) | Frontend + Live Updates | T9: WebSocket/SSE for live call transcript. Polish dashboard. |
 | 7 | Feb 25 (Tue) | Modulate Research | Research Velma API. Prep integration code (finish at event). Bug fixes. |
 | 8 | Feb 26 (Wed) | Demo Prep | T12: Pitch deck (3 min). Rehearse. Name-drop every sponsor. Final fixes. |

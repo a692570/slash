@@ -63,7 +63,7 @@ We integrate **9+ sponsor APIs/products** to maximize prize track eligibility:
 
 - **Runtime:** Node.js + TypeScript
 - **Voice:** Telnyx Call Control + AI Assistants (GPT-4o)
-- **Research:** Tavily API + Yutori Browsing API
+- **Research:** Tavily API + Yutori Browsing + Research API
 - **Database:** Neo4j (knowledge graph), AWS S3 (recordings)
 - **AI:** OpenAI GPT-4o (via Telnyx), AWS Bedrock
 - **Voice Intelligence:** Modulate Velma
