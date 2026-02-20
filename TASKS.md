@@ -40,9 +40,10 @@
 
 ### 🔴 P0 - Must Have for Demo Day (Critical Path)
 
-#### T1: Voice Agent Rewrite ⬜
+#### T1: Voice Agent Rewrite ✅ DONE
 **Owner:** Crabishek | **Est:** 1-2 days | **Blocked by:** Nothing (creds ready)
 **What:** Rewrite `src/services/voice.ts` to use Telnyx AI Assistants.
+**Note:** Rewrote voice.ts + assistant.ts to use real Telnyx AI Assistants. Fixed instruction passing on call.answered, added transcript/completion/error webhook handlers, fixed voice setting and variable bugs. Compiles clean.
 **Approach:** 
 1. Create a "Slash Bill Negotiator" assistant via `POST /v2/ai/assistants` with negotiation instructions, GPT-4o model, MiniMax voice, Deepgram transcription.
 2. Outbound call: `POST /v2/calls` (Dial) to provider retention number.
