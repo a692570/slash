@@ -20,14 +20,42 @@
 
 ## Sponsors (derived from judges)
 
-| Sponsor | What They Do | Track Angle for Slash |
-|---------|-------------|----------------------|
-| **Modulate** | Voice AI safety, ToxMod (voice moderation). Real-time voice analysis. | Use Modulate's voice tech for call quality/safety monitoring during negotiations. Their CTO + COO are both judging, so this is HIGH priority. |
-| **Yutori** | AI agents / conversational AI platform | Position Slash as an autonomous agent that acts on your behalf. Aligns with their vision. |
-| **Shapes inc** | AI character/persona platform | The negotiator persona angle. Our AI has a distinct negotiation personality. |
-| **Render** | Cloud deployment platform | **Deploy on Render.** Two Render judges. This is free points. |
-| **Gumloop** | AI workflow automation / no-code | Show how Slash pipelines (research > strategy > call) are composable workflows. |
-| **Node.js** | JavaScript runtime | We're already built on Node/Express/TypeScript. Vladimir will appreciate clean Node architecture. |
+**$47k+ in Prizes!**
+Teams of 4 max. In-person only. Application required.
+
+### Schedule
+- 9:30 AM: Doors Open
+- 9:45 AM: Keynote & Opening Remarks
+- 11:00 AM: Start Coding!
+- 1:30 PM: Lunch
+- 4:30 PM: Project Submission Deadline
+- 5:00 PM: Finalists Presentations and Judging
+- 7:00 PM: Awards Ceremony
+
+**NOTE:** Only ~5.5 hours of coding time (11 AM - 4:30 PM). Most work must be done BEFORE the event.
+
+### Full Sponsor List (from event page)
+1. **AWS** (Amazon Web Services)
+2. **OpenAI**
+3. **Render** (2 judges)
+4. **Tavily** (already integrated!)
+5. **Yutori** (1 judge)
+6. **Neo4j** (already in our architecture!)
+7. **Modulate** (2 judges)
+8. **Senso**
+9. **Numeric**
+
+| Sponsor | What They Do | Integration for Slash | Priority |
+|---------|-------------|----------------------|----------|
+| **Modulate** | Voice AI safety/intelligence (Velma). Real-time voice monitoring. | Pipe call audio through Velma for quality monitoring + safety guardrails during negotiations. | 🔴 HIGH (2 judges) |
+| **Render** | Cloud deployment | Deploy everything on Render. render.yaml. | 🔴 HIGH (2 judges) |
+| **Tavily** | AI search/research API | Already integrated for competitor research! Just make sure it's visible in demo. | ✅ DONE |
+| **Neo4j** | Graph database | Already in architecture for knowledge graph. Spin up Aura Free. | 🟡 MED (in PRD) |
+| **OpenAI** | LLM / Realtime API | Telnyx AI Assistants uses GPT-4o under the hood. Can swap to OpenAI Realtime at event if they provide API keys. | 🟡 MED |
+| **AWS** | Cloud / Bedrock / etc | Could use Bedrock for LLM or S3 for call recordings. Light touch. | 🟢 LOW |
+| **Yutori** | AI agents platform | Frame pitch around autonomous agents (their thesis). | 🟡 MED (1 judge) |
+| **Senso** | AI knowledge management for CX | Could frame our strategy engine as knowledge management for negotiations. | 🟢 LOW |
+| **Numeric** | AI for accounting/finance | Bills = financial data. Light mention in pitch. | 🟢 LOW |
 
 ## Strategy: Maximize Prize Eligibility
 
