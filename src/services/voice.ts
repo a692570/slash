@@ -7,8 +7,8 @@ import { getOrCreateAssistant } from './assistant.js';
 
 const TELNYX_API_BASE = 'https://api.telnyx.com/v2';
 
-// In-memory map of call_control_id -> negotiation_id for webhook handling
-const callNegotiationMap = new Map<string, string>();
+// In-memory map of call_control_id -> { negotiationId, instructions } for webhook handling
+const callNegotiationMap = new Map<string, { negotiationId: string; instructions: string }>();
 
 async function telnyxRequest(endpoint: string, method: string = 'GET', body?: object): Promise<any> {
   const apiKey = process.env.TELNYX_API_KEY;
@@ -96,12 +96,16 @@ export async function initiateCall(negotiation: Negotiation): Promise<{
   const callId = callResult.data.id;
   const callControlId = callResult.data.call_control_id;
 
-  // Track this call -> negotiation mapping
-  callNegotiationMap.set(callControlId, negotiation.id);
-
-  // Step 2: Start the AI assistant on the call with bill-specific instructions
+  // Build instructions first so we can use them both now and store for later
   const instructions = buildNegotiationInstructions(negotiation);
 
+  // Track this call -> negotiation mapping with instructions for later use
+  callNegotiationMap.set(callControlId, {
+    negotiationId: negotiation.id,
+    instructions,
+  });
+
+  // Step 2: Start the AI assistant on the call with bill-specific instructions
   try {
     await telnyxRequest(`/calls/${callControlId}/actions/ai_assistant_start`, 'POST', {
       assistant: {
@@ -132,11 +136,21 @@ export async function handleWebhook(event: {
       outcome?: string;
       recording_url?: string;
     };
+    // AI Assistant event fields
+    assistant_id?: string;
+    transcript?: string;
+    role?: 'user' | 'assistant';
+    error?: string;
+    summary?: string;
+    outcome?: string;
   };
 }): Promise<{
   status: string;
   callId: string;
   outcome?: string;
+  transcript?: string;
+  role?: string;
+  error?: string;
 }> {
   const { event_type, payload } = event;
   console.log(`Telnyx webhook: ${event_type}`, JSON.stringify(payload, null, 2));
@@ -147,12 +161,16 @@ export async function handleWebhook(event: {
 
     case 'call.answered': {
       // Try to start AI assistant if it wasn't started during dial
-      const negotiationId = callNegotiationMap.get(payload.call_control_id);
-      if (negotiationId) {
+      const callData = callNegotiationMap.get(payload.call_control_id);
+      if (callData) {
         try {
           const assistantId = await getOrCreateAssistant();
+          // Pass the negotiation-specific instructions when starting on answered call
           await telnyxRequest(`/calls/${payload.call_control_id}/actions/ai_assistant_start`, 'POST', {
-            assistant: { id: assistantId },
+            assistant: {
+              id: assistantId,
+              instructions: callData.instructions,
+            },
           });
           console.log(`AI assistant started on answered call ${payload.call_control_id}`);
         } catch (err) {
@@ -177,6 +195,50 @@ export async function handleWebhook(event: {
         callId: payload.call_id,
         outcome: 'conversation_ended',
       };
+
+    // ===========================================
+    // AI Assistant Events
+    // ===========================================
+    case 'call.ai.assistant.transcript': {
+      // Live transcript update during the call
+      const transcript = payload.transcript;
+      const role = payload.role;
+      console.log(`AI Transcript (${role}): ${transcript}`);
+      return {
+        status: 'transcript',
+        callId: payload.call_id,
+        transcript,
+        role,
+      };
+    }
+
+    case 'call.ai.assistant.completed': {
+      // AI assistant finished its work
+      const callData = callNegotiationMap.get(payload.call_control_id);
+      console.log(`AI Assistant completed on call ${payload.call_control_id}`);
+      
+      // Clean up the mapping
+      if (callData) {
+        callNegotiationMap.delete(payload.call_control_id);
+      }
+      
+      return {
+        status: 'ai_completed',
+        callId: payload.call_id,
+        outcome: payload.outcome || 'completed',
+        transcript: payload.summary,
+      };
+    }
+
+    case 'call.ai.assistant.error': {
+      // AI assistant encountered an error
+      console.error(`AI Assistant error on call ${payload.call_control_id}:`, payload.error);
+      return {
+        status: 'ai_error',
+        callId: payload.call_id,
+        error: payload.error,
+      };
+    }
 
     default:
       return { status: event_type, callId: payload.call_id };
