@@ -85,7 +85,7 @@ a{color:inherit;text-decoration:none}
 /* Tech */
 .tech{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #222}
 .tech-item{padding:32px;border-right:1px solid #222}
-.tech-item:last-child{border-right:none}
+.tech-item:nth-child(3n){border-right:none}
 .tech-item h3{font-size:15px;font-weight:700;margin-bottom:8px}
 .tech-item p{font-size:13px;color:#666;line-height:1.7}
 
@@ -110,7 +110,7 @@ footer{padding:24px clamp(20px,4vw,48px);font-size:11px;color:#333;letter-spacin
   .step:last-child{border-bottom:none}
   .verticals{grid-template-columns:1fr}
   .tech{grid-template-columns:1fr}
-  .tech-item{border-right:none;border-bottom:1px solid #222}
+  .tech-item{border-right:none;border-bottom:1px solid #222;border-top:none !important}
   .tech-item:last-child{border-bottom:none}
   .comp-row{grid-template-columns:1.5fr 1fr 1fr 1fr}
   .cta{flex-direction:column;text-align:center}
@@ -288,18 +288,34 @@ footer{padding:24px clamp(20px,4vw,48px);font-size:11px;color:#333;letter-spacin
     <div class="section-title">Under the hood</div>
     <div class="section-num">04</div>
   </div>
-  <div class="tech">
+  <div class="tech" style="grid-template-columns:repeat(3,1fr)">
     <div class="tech-item">
       <h3>Telnyx Voice AI</h3>
-      <p>Real outbound calls via Call Control. Actual phone calls to retention departments, not chatbot theater.</p>
+      <p>Real outbound calls via Call Control + AI Assistants. Actual phone calls to retention departments.</p>
     </div>
     <div class="tech-item">
-      <h3>Tavily + Neo4j</h3>
-      <p>Live competitor research feeds a knowledge graph. Every negotiation makes the next one smarter.</p>
+      <h3>OpenAI GPT-4o</h3>
+      <p>Powers the negotiation brain via Telnyx AI Assistants. Polite, persistent, data-armed.</p>
     </div>
     <div class="tech-item">
-      <h3>OpenAI Realtime</h3>
-      <p>GPT-4o powers the negotiation. Polite, persistent, data-armed. Escalates to supervisors when needed.</p>
+      <h3>Tavily Research</h3>
+      <p>Live competitor pricing research. Real-time market data arms every negotiation with leverage.</p>
+    </div>
+    <div class="tech-item" style="border-top:1px solid #222">
+      <h3>Neo4j Knowledge Graph</h3>
+      <p>Provider data, negotiation outcomes, competitor rates. Every call makes the next one smarter.</p>
+    </div>
+    <div class="tech-item" style="border-top:1px solid #222">
+      <h3>Yutori Browsing</h3>
+      <p>Deep web research on provider sites. Account verification and real bill scraping.</p>
+    </div>
+    <div class="tech-item" style="border-top:1px solid #222">
+      <h3>Modulate Velma</h3>
+      <p>Voice intelligence monitors every call for quality, safety, and emotion detection.</p>
+    </div>
+    <div class="tech-item" style="border-top:1px solid #222">
+      <h3>Render</h3>
+      <p>Production deployment. Fast, reliable, zero-config hosting for the full stack.</p>
     </div>
   </div>
 </div>
