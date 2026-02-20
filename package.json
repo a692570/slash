@@ -2,11 +2,14 @@
   "name": "slash",
   "version": "0.1.0",
   "description": "AI agent that negotiates your bills down",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "cd frontend && npm install && npm run build && cd .. && tsc",
     "start": "node dist/index.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "keywords": [
     "ai",

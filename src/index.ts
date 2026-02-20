@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import path from 'path';
 import apiRouter from './routes/api.js';
 import { initGraph, seedProviders } from './services/graph.js';
 
@@ -54,6 +55,14 @@ app.get('/api', (_req: Request, res: Response) => {
 
 // API routes
 app.use('/api', apiRouter);
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// SPA catch-all - serve index.html for client-side routing
+app.get('*', (_req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
 
 // 404 handler
 app.use((_req: Request, res: Response) => {

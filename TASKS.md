@@ -56,7 +56,7 @@
 #### T2: Telnyx Account Setup ✅ DONE
 **What:** API key, phone number (+14155491552), Call Control connection (2888193300928398948), Tavily key. All in `.env`.
 
-#### T3: Deploy on Render ⬜
+#### T3: Deploy on Render ✅ DONE
 **Owner:** Crabishek | **Est:** 2-3 hours
 **What:** Create `render.yaml`. Deploy Express backend + serve React frontend from Express. Single service.
 **Requirements:**
@@ -66,6 +66,7 @@
 - Serve frontend: `app.use(express.static('frontend/dist'))` in src/index.ts
 **Files:** New `render.yaml`, update `src/index.ts`, update `package.json` build scripts
 **Why Render:** 2 judges from Render. Free points.
+**Note:** Created `render.yaml` (Render Blueprint), updated `src/index.ts` to serve frontend static files + SPA catch-all, updated `package.json` with build script (builds frontend then backend) and Node.js engines field.
 
 #### T5: Demo Flow (End-to-End) ⬜
 **Owner:** TBD | **Est:** 1 day
