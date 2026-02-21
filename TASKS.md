@@ -107,7 +107,7 @@
 
 ### 🟢 P2 - Nice to Have (Polish)
 
-#### T10: Statement Scanner ⬜
+#### T14: Statement Scanner ⬜
 **Owner:** TBD | **Est:** Already built
 **What:** Test and polish `scanner.ts`. Upload a real statement, verify parsing.
 **Files:** `src/services/scanner.ts`, `frontend/src/pages/ScanStatement.tsx`
