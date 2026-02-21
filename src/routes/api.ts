@@ -26,6 +26,8 @@ import { buildStrategy } from '../services/strategy.js';
 import { getProviderInsights } from '../services/graph.js';
 import { initiateCall, handleWebhook } from '../services/voice.js';
 import { parseCCStatement } from '../services/scanner.js';
+import { createDemoIVR, DemoIVRResult } from '../services/demo-ivr.js';
+import { seedDemoBills, isDemoSeeded, getDemoUserId } from '../services/demo-seed.js';
 import {
   BillCreateInput,
   BillUpdateInput,
@@ -809,6 +811,87 @@ router.post('/scan', upload.single('statement'), async (req: Request, res: Respo
       error: error instanceof Error ? error.message : 'Failed to process PDF',
     });
   }
+});
+
+// ===========================================
+// DEMO SETUP ROUTES
+// ===========================================
+
+/**
+ * POST /api/demo/setup - Setup demo environment
+ * Creates the demo IVR assistant and seeds demo bills
+ */
+router.post('/demo/setup', async (_req: Request, res: Response): Promise<void> => {
+  try {
+    console.log('Setting up demo environment...');
+
+    // 1. Create demo IVR assistant (or find existing)
+    let ivrResult: DemoIVRResult;
+    try {
+      ivrResult = await createDemoIVR();
+      console.log(`Demo IVR: ${ivrResult.status} - ${ivrResult.assistantId}`);
+    } catch (ivrError) {
+      console.error('Failed to create demo IVR:', ivrError);
+      ivrResult = {
+        assistantId: 'failed',
+        name: 'Comcast Customer Retention Demo',
+        status: 'created',
+      };
+    }
+
+    // 2. Seed demo bills if not already seeded
+    const wasSeeded = isDemoSeeded();
+    const seedResult = seedDemoBills();
+    
+    res.json({
+      success: true,
+      data: {
+        ivr: {
+          assistantId: ivrResult.assistantId,
+          phoneNumber: ivrResult.phoneNumber,
+          status: ivrResult.status,
+        },
+        bills: {
+          seeded: !wasSeeded,
+          count: seedResult.billsCreated,
+          userId: seedResult.userId,
+        },
+        demoUser: {
+          email: 'demo@slash.ai',
+          password: 'demo123',
+          userId: seedResult.userId,
+        },
+        instructions: {
+          login: 'Use email "demo@slash.ai" with password "demo123" to log in as the demo user.',
+          ivr: ivrResult.phoneNumber 
+            ? `Call ${ivrResult.phoneNumber} to reach the demo Comcast retention line.`
+            : 'Ask Slash to call the demo Comcast retention line using the assistant ID.',
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Demo setup error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to setup demo environment',
+    });
+  }
+});
+
+/**
+ * GET /api/demo/status - Check demo environment status
+ */
+router.get('/demo/status', (_req: Request, res: Response): void => {
+  res.json({
+    success: true,
+    data: {
+      billsSeeded: isDemoSeeded(),
+      demoUser: {
+        email: 'demo@slash.ai',
+        userId: getDemoUserId?.() || null,
+      },
+    },
+  });
 });
 
 export default router;

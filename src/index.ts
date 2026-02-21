@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import apiRouter from './routes/api.js';
 import { initGraph, seedProviders } from './services/graph.js';
+import { seedDemoBills } from './services/demo-seed.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -95,6 +96,14 @@ app.listen(PORT, async () => {
     console.log('🧠 Knowledge Graph: Providers seeded');
   } else {
     console.log('🧠 Knowledge Graph: Not available (Neo4j not configured)');
+  }
+
+  // Seed demo bills for hackathon demo
+  const seedResult = seedDemoBills();
+  if (seedResult.billsCreated > 0) {
+    console.log(`🎯 Demo data: Seeded ${seedResult.billsCreated} bills for demo user`);
+  } else {
+    console.log('🎯 Demo data: Already seeded');
   }
 });
 
