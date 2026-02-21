@@ -169,17 +169,17 @@
 
 ## Sprint Plan (Feb 19-27)
 
-| Day | Date | Focus | Tasks |
-|-----|------|-------|-------|
-| 1 | Feb 19 (Wed) | Setup | ✅ Telnyx creds, Tavily key, hackathon research |
-| 2 | Feb 20 (Thu) | Voice Agent | T1: Rewrite voice.ts for Telnyx AI Assistants (Dial + ai_assistant_start). Create Slash negotiator assistant. |
-| 3 | Feb 21 (Fri) | Voice Agent + Render | T1 finish + T3: End-to-end call working. Create render.yaml, deploy. |
-| 4 | Feb 22 (Sat) | Neo4j + Seed | T6 + T7: Spin up Neo4j Aura Free, seed provider data, seed demo bills. |
-| 5 | Feb 23 (Sun) | Full Integration | T5 + T10: Wire full demo flow. Add bill > Tavily/Yutori research > Strategy > Call > Result. Integrate Yutori for deep research + retention phone lookup. |
-| 6 | Feb 24 (Mon) | Frontend + Live Updates | T9: WebSocket/SSE for live call transcript. Polish dashboard. |
-| 7 | Feb 25 (Tue) | Modulate Research | Research Velma API. Prep integration code (finish at event). Bug fixes. |
-| 8 | Feb 26 (Wed) | Demo Prep | T12: Pitch deck (3 min). Rehearse. Name-drop every sponsor. Final fixes. |
-| 9 | Feb 27 (Thu) | 🏆 HACKATHON | Modulate integration on-site. Polish. Demo. Win $47k. |
+| Day | Date | Focus |
+|-----|------|-------|
+| 1 | Feb 19 (Wed) | ✅ Setup: Telnyx creds, Tavily key, hackathon research |
+| 2 | Feb 20 (Thu) | ✅ Voice Agent: T1 rewrite, assistant created, T3 config done |
+| 3 | Feb 21 (Sat) | Deploy to Render, test real outbound call |
+| 4 | Feb 22 (Sat) | Neo4j setup + seed data (T6, T7) |
+| 5 | Feb 23 (Sun) | Demo flow (T5) + Yutori integration (T10) |
+| 6 | Feb 24 (Mon) | Live updates (T9) + minimal auth (T8) |
+| 7 | Feb 25 (Tue) | Landing page polish + bug fixes |
+| 8 | Feb 26 (Wed) | Pitch deck + rehearse + final fixes |
+| 🏆 | Feb 27 (Thu) | Hackathon: Modulate on-site, demo, win |
 
 ---
 

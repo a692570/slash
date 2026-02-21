@@ -1,5 +1,46 @@
 # Slash Dev Log 🔪
 
+## End of Day 2 Status - Feb 20
+
+### Completed
+| Task | Status | Notes |
+|------|--------|-------|
+| T1: Voice Agent Rewrite | ✅ Done | Code rewritten, API payload validated against real Telnyx API |
+| T2: Account Setup | ✅ Done | API key, phone, connection ID, Tavily key |
+| T3: Render Deploy Config | ✅ Done | render.yaml, static serving, SPA routing, build scripts |
+| Yutori Research | ✅ Done | API documented in research/yutori-integration.md |
+| API Testing | ✅ Done | Created assistant-23365f00, confirmed SadTeen voice valid |
+
+### Remaining (6 days: Feb 21-26)
+| Priority | Task | Est | Planned Day |
+|----------|------|-----|-------------|
+| 🔴 P0 | T5: Demo Flow (end-to-end) | 1 day | Feb 23 (Sun) |
+| 🔴 P0 | Deploy to Render + test real call | 2-3 hrs | Feb 21 (Sat) |
+| 🟡 P1 | T6: Neo4j Setup | 2-3 hrs | Feb 22 (Sat) |
+| 🟡 P1 | T7: Seed Demo Data | 2 hrs | Feb 22 (Sat) |
+| 🟡 P1 | T9: Live Updates (WebSocket/SSE) | 3-4 hrs | Feb 24 (Mon) |
+| 🟡 P1 | T10: Yutori Integration | 3-4 hrs | Feb 23 (Sun) |
+| 🟢 P2 | T8: Auth (minimal) | 1-2 hrs | Feb 24 (Mon) |
+| 🟢 P2 | T11: Landing Page Polish | 2 hrs | Feb 25 (Tue) |
+| 🟢 P2 | T13: Modulate Velma | At event | Feb 27 |
+| 📋 | T12: Pitch Deck + Demo Script | 3 hrs | Feb 26 (Wed) |
+
+### Revised Sprint Plan (Feb 21-27)
+| Day | Date | Focus |
+|-----|------|-------|
+| 3 | Feb 21 (Sat) | Deploy to Render, test real outbound call |
+| 4 | Feb 22 (Sat) | Neo4j setup + seed data (T6, T7) |
+| 5 | Feb 23 (Sun) | Demo flow (T5) + Yutori integration (T10) |
+| 6 | Feb 24 (Mon) | Live updates (T9) + minimal auth (T8) |
+| 7 | Feb 25 (Tue) | Landing page polish + bug fixes |
+| 8 | Feb 26 (Wed) | Pitch deck + rehearse + final fixes |
+| 🏆 | Feb 27 (Thu) | Hackathon: Modulate on-site, demo, win |
+
+### Key Risk
+Still haven't made a real outbound call. Render deploy (T3 config done, needs actual deploy) is gate for testing the full voice flow. Priority #1 tomorrow.
+
+---
+
 ## Feb 20, 2025 (Day 2 of 9) - Friday
 
 ### Done
