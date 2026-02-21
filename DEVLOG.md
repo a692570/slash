@@ -38,5 +38,16 @@
 | T6: Neo4j Setup | ⬜ Not started | Day 3 (Feb 22) |
 | T10: Yutori Integration | ⬜ Not started | Day 4 (Feb 23) |
 
+### API Testing (evening)
+- Cloudflare recovered. Tested against real Telnyx API.
+- `GET /v2/ai/assistants` returns 200 ✅ (20 existing assistants on account)
+- `POST /v2/ai/assistants` successfully created "Slash Bill Negotiator" ✅
+  - Assistant ID: `assistant-23365f00-7e4e-4be6-9260-3d190c48ebbb`
+  - Voice: `Minimax.speech-2.8-turbo.English_SadTeen` (confirmed valid)
+  - Model: `openai/gpt-4o`
+  - Transcription: `deepgram/flux`
+- Reverted voice setting from `matthew` back to `Minimax.speech-2.8-turbo.English_SadTeen`
+- **Key finding:** The TELNYX_API_KEY in shell env is stale. Must use key from `~/.openclaw/openclaw.json`
+
 ### Key Risk
 Voice agent is the foundation. Everything builds on it. If the Telnyx AI Assistants API payload is wrong, we'll need to fix before anything else works. Testing is priority #1 once Cloudflare's back.

@@ -49,7 +49,7 @@ export async function createSlashAssistant(): Promise<string> {
     instructions: DEFAULT_INSTRUCTIONS,
     greeting: "Hi, yeah, um, I'm calling about an account — I'm hoping to talk to someone about getting a better rate on the monthly bill.",
     voice_settings: {
-      voice: 'matthew',
+      voice: 'Minimax.speech-2.8-turbo.English_SadTeen',
       voice_speed: 1.0,
       background_audio: { type: 'predefined_media', value: 'silence', volume: 0.5 },
     },
