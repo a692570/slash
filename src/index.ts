@@ -60,7 +60,8 @@ app.use('/api', apiRouter);
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // SPA catch-all - serve index.html for client-side routing
-app.get('*', (_req: Request, res: Response) => {
+// Express 5 requires {*path} syntax for wildcard routes
+app.get('{*path}', (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
