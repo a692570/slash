@@ -4,6 +4,14 @@
 **Deadline:** 8 days from Feb 19
 **Goal:** WIN. Ship a working demo that makes a real phone call and negotiates a bill down.
 
+### 🔑 Credentials Strategy
+**Do NOT provision Neo4j, Yutori, Modulate, or other sponsor services yourself.**
+Sponsors will hand out API keys/instances at the event on Feb 27. All integration code should be written and tested with mocks/graceful degradation. On hackathon day, just plug credentials into `.env` and go.
+
+- **Already have:** Telnyx API key, Tavily API key, OpenAI (via Telnyx AI Assistants)
+- **Get at event:** Neo4j instance, Yutori API key, Modulate/Velma API key, AWS credits
+- **All services gracefully degrade** if credentials are missing (graph.ts logs warning, research falls back to Tavily-only, etc.)
+
 ---
 
 ## Codebase State (as of Feb 19)
@@ -83,9 +91,9 @@
 
 #### T6: Neo4j Setup ⬜
 **Owner:** Crabishek | **Est:** 2-3 hours
-**What:** Provision Neo4j Aura Free instance. Seed with provider data. Connect `graph.ts`.
+**What:** Seed code ready. Neo4j Aura instance will be provisioned at the event (sponsor handout). Connect `graph.ts` on-site.
 **Output:** Working knowledge graph that gets smarter with each negotiation.
-**MUST DO:** Neo4j is a sponsor. Real instance required, no faking.
+**MUST DO:** Neo4j is a sponsor. Real instance required, no faking. **Get credentials at event.**
 
 #### T7: Seed Demo Data ⬜
 **Owner:** TBD | **Est:** 1-2 hours
