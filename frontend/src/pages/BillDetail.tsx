@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Play, CheckCircle, XCircle } from 'lucide-react';
 import { ProviderLogo } from '../components/ProviderLogo';
 import { StatusBadge } from '../components/StatusBadge';
-import { api, mockBills, mockNegotiations, type Bill, type Negotiation } from '../api/client';
+import { api, type Bill, type Negotiation } from '../api/client';
 
 export function BillDetail() {
   const { id } = useParams<{ id: string }>();
@@ -16,21 +16,18 @@ export function BillDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const bills = await api.getBills();
-        const foundBill = bills.find(b => b.id === id);
+        const foundBill = await api.getBill(id!);
         if (foundBill) {
           setBill(foundBill);
+        }
+        // Check for existing negotiations
+        const negs = await api.getNegotiations();
+        const existing = negs.find(n => n.billId === id);
+        if (existing) {
+          setNegotiation(existing);
         }
       } catch (error) {
-        console.log('Using mock data - API not available');
-        const foundBill = mockBills.find(b => b.id === id);
-        if (foundBill) {
-          setBill(foundBill);
-          const foundNegotiation = mockNegotiations.find(n => n.billId === id);
-          if (foundNegotiation) {
-            setNegotiation(foundNegotiation);
-          }
-        }
+        console.log('API not available:', error);
       } finally {
         setLoading(false);
       }
@@ -67,13 +64,11 @@ export function BillDetail() {
     setNegotiating(true);
     
     try {
-      const newNegotiation = await api.negotiateBill(bill.id);
-      setNegotiation(newNegotiation);
-      navigate(`/negotiations/${newNegotiation.id}`);
+      const result = await api.negotiateBill(bill.id);
+      const negId = result.negotiationId || (result as any).id;
+      navigate(`/negotiations/${negId}`);
     } catch (error) {
       console.error('Failed to start negotiation:', error);
-      // For demo, navigate to mock negotiation
-      navigate(`/negotiations/mock-n1`);
     } finally {
       setNegotiating(false);
     }

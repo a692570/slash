@@ -1,3 +1,7 @@
+// ===========================================
+// API CLIENT - Slash Frontend
+// ===========================================
+
 // Types
 export interface Bill {
   id: string;
@@ -7,6 +11,7 @@ export interface Bill {
   currentRate: number;
   accountNumber: string;
   planName?: string;
+  status?: string;
   createdAt: string;
 }
 
@@ -18,6 +23,7 @@ export interface Negotiation {
   newRate?: number;
   monthlySavings?: number;
   annualSavings?: number;
+  totalSavings?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -27,6 +33,11 @@ export interface DashboardStats {
   activeNegotiations: number;
   successRate: number;
   billsTracked: number;
+  totalBills?: number;
+  totalMonthlySavings?: number;
+  totalLifetimeSavings?: number;
+  completedNegotiations?: number;
+  successfulNegotiations?: number;
 }
 
 export interface CreateBillRequest {
@@ -38,16 +49,61 @@ export interface CreateBillRequest {
   planName?: string;
 }
 
-// API Client
+// ===========================================
+// DEMO USER MANAGEMENT
+// ===========================================
+
+const DEMO_USER_KEY = 'slash_demo_user_id';
+
+function getDemoUserId(): string | null {
+  return localStorage.getItem(DEMO_USER_KEY);
+}
+
+function setDemoUserId(id: string): void {
+  localStorage.setItem(DEMO_USER_KEY, id);
+}
+
+/**
+ * Initialize demo user - call on app boot.
+ * Hits POST /api/demo/setup to create/get demo user, stores ID.
+ */
+export async function initDemoUser(): Promise<string | null> {
+  // Check if already initialized
+  const existing = getDemoUserId();
+  if (existing) return existing;
+
+  try {
+    const res = await fetch(`${API_BASE}/demo/setup`, { method: 'POST' });
+    const json = await res.json();
+    if (json.success && json.data?.userId) {
+      setDemoUserId(json.data.userId);
+      return json.data.userId;
+    }
+  } catch (error) {
+    console.warn('[API] Demo setup failed:', error);
+  }
+  return null;
+}
+
+// ===========================================
+// FETCH WRAPPER
+// ===========================================
+
 const API_BASE = '/api';
 
 async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
+  const userId = getDemoUserId();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options?.headers as Record<string, string>),
+  };
+  if (userId) {
+    headers['x-user-id'] = userId;
+  }
+
   const response = await fetch(url, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
+    headers,
   });
   
   if (!response.ok) {
@@ -57,95 +113,74 @@ async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
   return response.json();
 }
 
+// ===========================================
+// API METHODS
+// ===========================================
+
 export const api = {
   // Bills
-  getBills: () => fetchJSON<Bill[]>(`${API_BASE}/bills`),
+  getBills: async (): Promise<Bill[]> => {
+    const res = await fetchJSON<any>(`${API_BASE}/bills`);
+    // Backend returns { success, data: { items: [...] } }
+    if (res?.data?.items) return res.data.items;
+    if (res?.items) return res.items;
+    if (Array.isArray(res?.data)) return res.data;
+    if (Array.isArray(res)) return res;
+    return [];
+  },
+
+  getBill: async (id: string): Promise<Bill | null> => {
+    const res = await fetchJSON<any>(`${API_BASE}/bills/${id}`);
+    return res?.data || res || null;
+  },
   
-  createBill: (data: CreateBillRequest) => 
-    fetchJSON<Bill>(`${API_BASE}/bills`, {
+  createBill: async (data: CreateBillRequest): Promise<Bill> => {
+    const res = await fetchJSON<any>(`${API_BASE}/bills`, {
       method: 'POST',
       body: JSON.stringify(data),
-    }),
+    });
+    return res?.data || res;
+  },
   
-  negotiateBill: (billId: string) =>
-    fetchJSON<Negotiation>(`${API_BASE}/bills/${billId}/negotiate`, {
+  negotiateBill: async (billId: string): Promise<{ negotiationId: string; status: string }> => {
+    const res = await fetchJSON<any>(`${API_BASE}/bills/${billId}/negotiate`, {
       method: 'POST',
-    }),
+    });
+    // Backend returns { success, data: { negotiationId, status, ... } }
+    return res?.data || res;
+  },
   
   // Negotiations
-  getNegotiation: (id: string) =>
-    fetchJSON<Negotiation>(`${API_BASE}/negotiations/${id}`),
+  getNegotiations: async (): Promise<Negotiation[]> => {
+    const res = await fetchJSON<any>(`${API_BASE}/negotiations`);
+    if (res?.data?.items) return res.data.items;
+    if (Array.isArray(res?.data)) return res.data;
+    if (Array.isArray(res)) return res;
+    return [];
+  },
+
+  getNegotiation: async (id: string): Promise<Negotiation> => {
+    const res = await fetchJSON<any>(`${API_BASE}/negotiations/${id}`);
+    return res?.data || res;
+  },
   
   // Dashboard
-  getDashboardStats: () =>
-    fetchJSON<DashboardStats>(`${API_BASE}/dashboard`),
+  getDashboardStats: async (): Promise<DashboardStats> => {
+    const res = await fetchJSON<any>(`${API_BASE}/dashboard`);
+    // Backend returns { success, data: { user, stats, recentNegotiations, activeBills } }
+    const stats = res?.data?.stats || res?.data || res;
+    return {
+      totalSavings: stats.totalMonthlySavings || stats.totalSavings || 0,
+      activeNegotiations: stats.activeNegotiations || 0,
+      successRate: stats.successRate || 0,
+      billsTracked: stats.totalBills || stats.billsTracked || 0,
+      ...stats,
+    };
+  },
+
+  // Graph insights
+  getProviderInsights: async (providerId: string) => {
+    const res = await fetchJSON<any>(`${API_BASE}/graph/provider/${providerId}`);
+    return res?.data || res;
+  },
 };
-
-// Mock data for demo/fallback
-export const mockStats: DashboardStats = {
-  totalSavings: 1847,
-  activeNegotiations: 2,
-  successRate: 87,
-  billsTracked: 6,
-};
-
-export const mockBills: Bill[] = [
-  {
-    id: '1',
-    provider: 'Xfinity',
-    category: 'internet',
-    currentRate: 89.99,
-    accountNumber: '8472916352',
-    planName: 'Performance Pro Internet',
-    createdAt: '2024-01-15T10:30:00Z',
-  },
-  {
-    id: '2',
-    provider: 'T-Mobile',
-    category: 'cell_phone',
-    currentRate: 85.00,
-    accountNumber: '5129384761',
-    planName: 'Magenta MAX',
-    createdAt: '2024-01-20T14:15:00Z',
-  },
-  {
-    id: '3',
-    provider: 'Geico',
-    category: 'insurance',
-    currentRate: 145.00,
-    accountNumber: 'GEICO123456',
-    planName: 'Auto Insurance - Full Coverage',
-    createdAt: '2024-02-01T09:00:00Z',
-  },
-  {
-    id: '4',
-    provider: 'Stanford Medical Center',
-    category: 'medical',
-    providerName: 'Stanford Medical Center',
-    currentRate: 450.00,
-    accountNumber: 'SMC-789456',
-    planName: 'Emergency Room Visit',
-    createdAt: '2024-01-28T11:00:00Z',
-  },
-];
-
-export const mockNegotiations: Negotiation[] = [
-  {
-    id: 'n1',
-    billId: '1',
-    status: 'success',
-    originalRate: 89.99,
-    newRate: 64.99,
-    monthlySavings: 25.00,
-    annualSavings: 300.00,
-    createdAt: '2024-02-10T08:00:00Z',
-    updatedAt: '2024-02-10T08:15:00Z',
-  },
-  {
-    id: 'n2',
-    billId: '3',
-    status: 'calling',
-    createdAt: '2024-02-17T18:00:00Z',
-    updatedAt: '2024-02-17T18:05:00Z',
-  },
-];

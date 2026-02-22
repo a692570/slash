@@ -1,21 +1,36 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { DollarSign, TrendingUp, Percent, Receipt, Plus, ArrowRight } from 'lucide-react';
+import { DollarSign, TrendingUp, Percent, Receipt, Plus, ArrowRight, Phone } from 'lucide-react';
 import { StatCard } from '../components/StatCard';
 import { StatusBadge } from '../components/StatusBadge';
-import { api, mockStats, mockNegotiations, type DashboardStats, type Negotiation } from '../api/client';
+import { ProviderLogo } from '../components/ProviderLogo';
+import { api, type DashboardStats, type Bill, type Negotiation } from '../api/client';
+
+const defaultStats: DashboardStats = {
+  totalSavings: 0,
+  activeNegotiations: 0,
+  successRate: 0,
+  billsTracked: 0,
+};
 
 export function Dashboard() {
-  const [stats, setStats] = useState<DashboardStats>(mockStats);
-  const [negotiations] = useState<Negotiation[]>(mockNegotiations);
+  const [stats, setStats] = useState<DashboardStats>(defaultStats);
+  const [bills, setBills] = useState<Bill[]>([]);
+  const [negotiations, setNegotiations] = useState<Negotiation[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const statsData = await api.getDashboardStats();
+        const [statsData, billsData, negsData] = await Promise.all([
+          api.getDashboardStats().catch(() => defaultStats),
+          api.getBills().catch(() => []),
+          api.getNegotiations().catch(() => []),
+        ]);
         setStats(statsData);
+        setBills(billsData);
+        setNegotiations(negsData);
       } catch (error) {
-        console.log('Using mock data - API not available');
+        console.log('Using default data - API not available');
       }
     };
     
@@ -69,7 +84,7 @@ export function Dashboard() {
         />
         <StatCard
           title="Success Rate"
-          value={`${stats.successRate}%`}
+          value={`${Math.round(stats.successRate)}%`}
           icon={Percent}
           color="success"
         />
@@ -79,6 +94,41 @@ export function Dashboard() {
           icon={Receipt}
         />
       </div>
+
+      {/* Bills List */}
+      {bills.length > 0 && (
+        <div className="bg-[#141414] border border-[#262626] rounded-xl mb-6">
+          <div className="p-5 border-b border-[#262626] flex items-center justify-between">
+            <h2 className="font-semibold">Your Bills</h2>
+          </div>
+          
+          <div className="divide-y divide-[#262626]">
+            {bills.map((bill) => (
+              <Link
+                key={bill.id}
+                to={`/bills/${bill.id}`}
+                className="p-4 flex items-center justify-between hover:bg-[#1a1a1a] transition-colors block"
+              >
+                <div className="flex items-center gap-4">
+                  <ProviderLogo provider={bill.provider} />
+                  <div>
+                    <div className="font-medium">{bill.planName || bill.provider}</div>
+                    <div className="text-sm text-[#888] capitalize">{bill.category?.replace('_', ' ')}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <div className="font-semibold">{formatCurrency(bill.currentRate)}/mo</div>
+                    {bill.status && <StatusBadge status={bill.status as any} />}
+                  </div>
+                  <Phone className="w-4 h-4 text-[#888]" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Recent Negotiations */}
       <div className="bg-[#141414] border border-[#262626] rounded-xl">
@@ -91,13 +141,17 @@ export function Dashboard() {
         
         <div className="divide-y divide-[#262626]">
           {negotiations.map((negotiation) => (
-            <div key={negotiation.id} className="p-4 flex items-center justify-between">
+            <Link
+              key={negotiation.id}
+              to={`/negotiations/${negotiation.id}`}
+              className="p-4 flex items-center justify-between hover:bg-[#1a1a1a] transition-colors block"
+            >
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-[#1a1a1a] flex items-center justify-center">
                   <Receipt className="w-5 h-5 text-[#888]" />
                 </div>
                 <div>
-                  <div className="font-medium">Bill #{negotiation.billId}</div>
+                  <div className="font-medium">Bill #{negotiation.billId?.slice(-6) || negotiation.billId}</div>
                   <div className="text-sm text-[#888]">{formatDate(negotiation.createdAt)}</div>
                 </div>
               </div>
@@ -108,19 +162,16 @@ export function Dashboard() {
                     <div className="text-[#00ff88] font-medium">
                       {formatCurrency(negotiation.monthlySavings)}/mo saved
                     </div>
-                    <div className="text-sm text-[#888]">
-                      {formatCurrency(negotiation.annualSavings!)}/year
-                    </div>
                   </div>
                 )}
                 <StatusBadge status={negotiation.status} />
               </div>
-            </div>
+            </Link>
           ))}
           
           {negotiations.length === 0 && (
             <div className="p-8 text-center text-[#888]">
-              No negotiations yet. Add a bill to get started.
+              No negotiations yet. Click a bill and hit "Negotiate" to get started.
             </div>
           )}
         </div>

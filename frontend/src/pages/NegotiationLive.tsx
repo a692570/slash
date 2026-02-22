@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, Circle, Loader2 } from 'lucide-react';
-import { api, mockNegotiations, type Negotiation } from '../api/client';
+import { api, type Negotiation } from '../api/client';
 
 const STEPS = [
   { id: 'pending', label: 'Initializing' },
@@ -26,19 +26,14 @@ export function NegotiationLive() {
         setNegotiation(data);
       } catch (error) {
         console.log('Using mock data - API not available');
-        const found = mockNegotiations.find(n => n.id === id);
-        if (found) {
-          setNegotiation(found);
-        } else {
-          // Create a mock negotiation for demo
-          setNegotiation({
-            id: id!,
-            billId: '1',
-            status: 'researching',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          });
-        }
+        // Fallback: show in-progress state
+        setNegotiation({
+          id: id!,
+          billId: 'unknown',
+          status: 'researching',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
       } finally {
         setLoading(false);
       }
