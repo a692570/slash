@@ -89,17 +89,18 @@ Sponsors will hand out API keys/instances at the event on Feb 27. All integratio
 **Acceptance:** Can call Yutori to research a provider and get structured competitor data back. Falls back to Tavily-only if Yutori key not set.
 **Note:** Yutori is a sponsor with 1 judge (chief scientist). Integration scores prize track points.
 
-#### T6: Neo4j Setup ⬜
+#### T6: Neo4j Setup ✅ DONE (code ready, credentials at event)
 **Owner:** Crabishek | **Est:** 2-3 hours
 **What:** Seed code ready. Neo4j Aura instance will be provisioned at the event (sponsor handout). Connect `graph.ts` on-site.
 **Output:** Working knowledge graph that gets smarter with each negotiation.
 **MUST DO:** Neo4j is a sponsor. Real instance required, no faking. **Get credentials at event.**
+**Note:** Graph seed data added to `demo-seed.ts` with `seedGraphData()`. Seeds competitor rates for 5 providers, 10 retention offers, 3 past negotiation results. Called automatically on startup after Neo4j connects. Gracefully skips if Neo4j not configured.
 
-#### T7: Seed Demo Data ⬜
-**Owner:** TBD | **Est:** 1-2 hours
-**What:** Pre-populate storage with demo user, demo bills (Comcast $189/mo internet, T-Mobile $85/mo cell).
-**Why:** Judges don't want to fill out forms. Start with data already there.
-**Files:** New `src/seed.ts`, call from `src/index.ts` on startup.
+#### T7: Seed Demo Data ✅ DONE
+**Owner:** Crabishek | **Est:** 1-2 hours
+**What:** Pre-populate storage with demo user, demo bills + Neo4j graph with competitor rates, retention offers, and past results.
+**Files:** `src/services/demo-seed.ts` (updated with `seedGraphData()`), `src/index.ts` (calls seedGraphData on startup)
+**Note:** In-memory: 5 demo bills (Comcast, AT&T Wireless, State Farm, Spectrum, T-Mobile) with 2 past successful negotiations. Neo4j: competitor rates, retention offers with success rates, negotiation history showing the graph "learning".
 
 #### T8: Auth (Minimal) ⬜
 **Owner:** TBD | **Est:** 3-4 hours
@@ -144,7 +145,7 @@ Sponsors will hand out API keys/instances at the event on Feb 27. All integratio
 ## Key Decisions (Made)
 
 1. **Voice approach:** Telnyx AI Assistants. Dial via Call Control, then `ai_assistant_start`. Telnyx handles GPT-4o, MiniMax TTS, Deepgram STT. No OpenAI key needed (swap at event if they provide one).
-2. **Neo4j:** Spin up Aura Free. It's a sponsor, so must be real.
+2. **Neo4j:** Code + seed data ready. Get Aura Free instance from sponsor at event. Plug creds into `.env`.
 3. **Auth:** Skip. "Login as Demo User" button. Judges don't care.
 4. **Deploy target:** Render. Two Render judges. Non-negotiable.
 5. **Modulate integration:** Pipe call audio through Velma for voice safety monitoring. Two Modulate judges (CTO + COO). Highest priority sponsor integration.
@@ -154,8 +155,8 @@ Sponsors will hand out API keys/instances at the event on Feb 27. All integratio
 | Sponsor | Integration | Status | Priority |
 |---------|------------|--------|----------|
 | Tavily | Competitor research API | ✅ Code exists, API key configured | Done |
-| Neo4j | Knowledge graph for provider data | 🔲 Code exists, need Aura Free instance | HIGH (sponsor) |
-| Render | Deployment platform | 🔲 Need render.yaml | HIGH (2 judges) |
+| Neo4j | Knowledge graph for provider data | ✅ Code + seed ready, plug creds at event | HIGH (sponsor) |
+| Render | Deployment platform | ✅ render.yaml created | HIGH (2 judges) |
 | Modulate | Velma voice monitoring on calls | 🔲 Research API, integrate at event | HIGH (2 judges) |
 | OpenAI | GPT-4o via Telnyx AI Assistants | ✅ Indirect (Telnyx handles it) | Done |
 | AWS | Could use for call recordings (S3) | 🔲 Stretch goal | LOW |
@@ -182,7 +183,7 @@ Sponsors will hand out API keys/instances at the event on Feb 27. All integratio
 | 1 | Feb 19 (Wed) | ✅ Setup: Telnyx creds, Tavily key, hackathon research |
 | 2 | Feb 20 (Thu) | ✅ Voice Agent: T1 rewrite, assistant created, T3 config done |
 | 3 | Feb 21 (Sat) | Deploy to Render, test real outbound call |
-| 4 | Feb 22 (Sat) | Neo4j setup + seed data (T6, T7) |
+| 4 | Feb 22 (Sat) | ✅ Neo4j seed code + graph data (T6, T7) |
 | 5 | Feb 23 (Sun) | Demo flow (T5) + Yutori integration (T10) |
 | 6 | Feb 24 (Mon) | Live updates (T9) + minimal auth (T8) |
 | 7 | Feb 25 (Tue) | Landing page polish + bug fixes |
