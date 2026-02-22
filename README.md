@@ -4,7 +4,7 @@
 
 Americans overpay $50B+ annually on recurring bills. Slash researches competitor pricing, calls your providers over real phone lines, and negotiates better rates — while you sleep.
 
-> 🏆 Built for the **Autonomous Agents Hackathon SF** — Feb 27, 2026 — $47k+ in prizes
+> 🏆 Built for the [**Autonomous Agents Hackathon SF**](https://luma.com/sfagents?tk=Zi7oGC) — Feb 27, 2026 — $47k+ in prizes
 
 ---
 
@@ -108,6 +108,6 @@ openclaw skill install slash
 
 ## Team
 
-Built by Abhishek at the **Autonomous Agents Hackathon SF** — Feb 27, 2026
+Built by Abhishek at the [**Autonomous Agents Hackathon SF**](https://luma.com/sfagents?tk=Zi7oGC) — Feb 27, 2026
 
 *Slash saves you money so you don't have to sit on hold.*
