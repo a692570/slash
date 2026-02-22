@@ -4,7 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import apiRouter from './routes/api.js';
 import { initGraph, seedProviders } from './services/graph.js';
-import { seedDemoBills } from './services/demo-seed.js';
+import { seedDemoBills, seedGraphData } from './services/demo-seed.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -94,6 +94,7 @@ app.listen(PORT, async () => {
     console.log('🧠 Knowledge Graph: Connected to Neo4j');
     await seedProviders();
     console.log('🧠 Knowledge Graph: Providers seeded');
+    await seedGraphData();
   } else {
     console.log('🧠 Knowledge Graph: Not available (Neo4j not configured)');
   }
